@@ -7,7 +7,7 @@
 , doCheck ? true
 , cudaSupport ? config.cudaSupport or false
 , ncclSupport ? false
-, rSupport ? true
+, rSupport ? false
 , fedmlSupport ? false
 , cudaPackages
 , llvmPackages
@@ -47,10 +47,14 @@ stdenv.mkDerivation rec {
     ++ lib.optionals cudaSupport [ "-DUSE_CUDA=ON" "-DCUDA_HOST_COMPILER=${cudaPackages.cudatoolkit.cc}/bin/cc" ]
     ++ lib.optionals (cudaSupport && lib.versionAtLeast cudaPackages.cudatoolkit.version "11.4.0") [ "-DBUILD_WITH_CUDA_CUB=ON" ]
     ++ lib.optionals ncclSupport [ "-DUSE_NCCL=ON" ]
-    ++ lib.optionals ncclSupport [ "-DR_LIB=ON" ]
+    ++ lib.optionals rSupport [ "-DR_LIB=ON" ]
     ++ lib.optionals fedmlSupport [ "-DPLUGIN_FEDERATED=ON" ];
 
   inherit doCheck;
+
+  preConfigure = lib.optionalString rSupport ''
+    make Rpack
+  '';
 
   # By default, cmake build will run ctests with all checks enabled
   # If we're building with cuda, we run ctest manually so that we can skip the GPU tests
