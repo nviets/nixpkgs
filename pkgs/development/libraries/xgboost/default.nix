@@ -7,6 +7,7 @@
 , doCheck ? true
 , cudaSupport ? config.cudaSupport or false
 , ncclSupport ? false
+, rSupport ? true
 , fedmlSupport ? false
 , cudaPackages
 , llvmPackages
@@ -46,6 +47,7 @@ stdenv.mkDerivation rec {
     ++ lib.optionals cudaSupport [ "-DUSE_CUDA=ON" "-DCUDA_HOST_COMPILER=${cudaPackages.cudatoolkit.cc}/bin/cc" ]
     ++ lib.optionals (cudaSupport && lib.versionAtLeast cudaPackages.cudatoolkit.version "11.4.0") [ "-DBUILD_WITH_CUDA_CUB=ON" ]
     ++ lib.optionals ncclSupport [ "-DUSE_NCCL=ON" ]
+    ++ lib.optionals ncclSupport [ "-DR_LIB=ON" ]
     ++ lib.optionals fedmlSupport [ "-DPLUGIN_FEDERATED=ON" ];
 
   inherit doCheck;
