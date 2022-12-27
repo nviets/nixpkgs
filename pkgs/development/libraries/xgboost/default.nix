@@ -14,6 +14,7 @@
 , grpc
 , protobuf
 , openssl
+, R
 }:
 
 assert ncclSupport -> cudaSupport;
@@ -38,6 +39,8 @@ stdenv.mkDerivation rec {
     cudaPackages.autoAddOpenGLRunpathHook
   ] ++ lib.optionals fedmlSupport [
     grpc openssl protobuf
+  ] ++ lib.optionals rSupport [
+    R
   ];
 
   buildInputs = [ gtest ] ++ lib.optional cudaSupport cudaPackages.cudatoolkit
@@ -54,6 +57,7 @@ stdenv.mkDerivation rec {
 
   preConfigure = lib.optionalString rSupport ''
     make Rpack
+    mv xgboost/ xgboost_rpack/
   '';
 
   # By default, cmake build will run ctests with all checks enabled
@@ -70,9 +74,15 @@ stdenv.mkDerivation rec {
     cp -r ../include $out
     cp -r ../dmlc-core/include/dmlc $out/include
     cp -r ../rabit/include/rabit $out/include
+    #cp ../lib/xgboost.so $out/lib/
+    echo "testing!!!!!!!!!!!!!!!!!"
+    ls ../*
     install -Dm755 ../lib/${libname} $out/lib/${libname}
     install -Dm755 ../xgboost $out/bin/xgboost
     runHook postInstall
+  '' 
+  ++ lib.optionalString rSupport ''
+    cp ../lib/xgboost.so $out/lib/
   '';
 
   meta = with lib; {
