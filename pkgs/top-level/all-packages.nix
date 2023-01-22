@@ -24571,6 +24571,7 @@ with pkgs;
   # which bundled the server and CLI into the same derivation. Will be
   # removed in a few releases.
   influxdb2 = callPackage ../servers/nosql/influxdb2/combined.nix { };
+  influxdb_iox-server = callPackage ../servers/nosql/influxdb_iox { };
 
   mysql80 = callPackage ../servers/sql/mysql/8.0.x.nix {
     inherit (darwin) cctools developer_cmds DarwinTools;
