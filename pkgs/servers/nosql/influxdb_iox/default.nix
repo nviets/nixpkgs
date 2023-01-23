@@ -11,6 +11,7 @@
 , stdenv
 , libiconv
 , protobuf
+, lld
 }:
 
 rustPlatform.buildRustPackage {
@@ -24,8 +25,8 @@ rustPlatform.buildRustPackage {
     };
     #sourceRoot = "source/influxdb_iox";
     cargoSha256 = "sha256-RXAdTBtD0b/iEToJuefQFJSZAsTQ+TqODVFlA6VvuNk=";
-    nativeBuildInputs = [ llvmPackages.libclang protobuf ];
-    buildInputs = [ llvmPackages.libclang protobuf ] ++ lib.optional stdenv.isDarwin libiconv;
+    nativeBuildInputs = [ llvmPackages.libclang protobuf lld ];
+    buildInputs = [ llvmPackages.libclang protobuf lld ] ++ lib.optional stdenv.isDarwin libiconv;
     #LIBCLANG_PATH = "${llvmPackages.libclang.lib}/lib";
 #    pkgcfg = ''
 #      Name: influxdb_iox
@@ -38,7 +39,8 @@ rustPlatform.buildRustPackage {
       # https://github.com/NixOS/nixpkgs/blob/c3cc2bded1d080e20fa2b2b546bf04f19eef5cd9/pkgs/servers/mail/vsmtp/default.nix
       # see this page for an example of GIT_HASH patch
       cat influxdb_iox/build.rs
-      set RUST_BACKTRACE=1
+      export VERSION_HASH=840923abab56f5f5f7fedf2a622e5f976a3d9eac
+      export RUST_BACKTRACE=1
     '';
 #    passAsFile = [ "pkgcfg" ];
 #    postInstall = ''
