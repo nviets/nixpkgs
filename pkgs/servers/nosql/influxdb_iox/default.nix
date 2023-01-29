@@ -20,11 +20,11 @@ rustPlatform.buildRustPackage {
     src = fetchFromGitHub {
       owner = "influxdata";
       repo = "influxdb_iox";
-      rev = "840923abab56f5f5f7fedf2a622e5f976a3d9eac";
-      sha256 = "sha256-ZBxs0CuyoAQP5+yEjlLPziIc+u83i64Q/+RgSiU8eWc=";
+      rev = "55257b46c942df9daea41bfaf16830c3fa218158";
+      sha256 = "sha256-Ss7MEtWHufkNZcB/z8Z4pv6AqZxj3aMOOLj3xEL8xVE=";
     };
     #sourceRoot = "source/influxdb_iox";
-    cargoSha256 = "sha256-RXAdTBtD0b/iEToJuefQFJSZAsTQ+TqODVFlA6VvuNk=";
+    cargoSha256 = "sha256-P2HYmr1rXSKbyP8S4UaN7ojiY5ojudf4tvYoTegU8NM=";
     nativeBuildInputs = [ llvmPackages.libclang protobuf lld ];
     buildInputs = [ llvmPackages.libclang protobuf lld ] ++ lib.optional stdenv.isDarwin libiconv;
     #LIBCLANG_PATH = "${llvmPackages.libclang.lib}/lib";
@@ -39,7 +39,7 @@ rustPlatform.buildRustPackage {
       # https://github.com/NixOS/nixpkgs/blob/c3cc2bded1d080e20fa2b2b546bf04f19eef5cd9/pkgs/servers/mail/vsmtp/default.nix
       # see this page for an example of GIT_HASH patch
       cat influxdb_iox/build.rs
-      export VERSION_HASH=840923abab56f5f5f7fedf2a622e5f976a3d9eac
+      export VERSION_HASH=55257b46c942df9daea41bfaf16830c3fa218158
       export RUST_BACKTRACE=1
     '';
 #    passAsFile = [ "pkgcfg" ];
