@@ -4,6 +4,7 @@
 , tqdm
 , pandas
 , torch
+, pytest-runner
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -22,6 +23,7 @@ python3.pkgs.buildPythonPackage rec {
     tqdm
     pandas
     torch
+    pytest-runner
   ];
 
   doCheck = false;
