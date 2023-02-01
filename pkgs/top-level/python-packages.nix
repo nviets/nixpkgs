@@ -1997,6 +1997,8 @@ self: super: with self; {
 
   coordinates = callPackage ../development/python-modules/coordinates { };
 
+  copulas = callPackage ../development/python-modules/copulas { };
+
   coreapi = callPackage ../development/python-modules/coreapi { };
 
   coreschema = callPackage ../development/python-modules/coreschema { };
@@ -2103,6 +2105,8 @@ self: super: with self; {
   cssutils = callPackage ../development/python-modules/cssutils { };
 
   csvw = callPackage ../development/python-modules/csvw { };
+
+  ctgan = callPackage ../development/python-modules/ctgan { };
 
   cu2qu = callPackage ../development/python-modules/cu2qu { };
 
@@ -2314,6 +2318,8 @@ self: super: with self; {
   deepdiff = callPackage ../development/python-modules/deepdiff { };
 
   deepdish = callPackage ../development/python-modules/deepdish { };
+
+  deepecho = callPackage ../development/python-modules/deepecho { };
 
   deepmerge = callPackage ../development/python-modules/deepmerge { };
 
@@ -5674,6 +5680,8 @@ self: super: with self; {
   markdown-macros = callPackage ../development/python-modules/markdown-macros { };
 
   markdownify  = callPackage ../development/python-modules/markdownify { };
+
+  markdown-rundoc = callPackage ../development/python-modules/markdown-rundoc { };
 
   markdownsuperscript = callPackage ../development/python-modules/markdownsuperscript { };
 
@@ -9812,6 +9820,8 @@ self: super: with self; {
 
   rdkit = callPackage ../development/python-modules/rdkit { };
 
+  rdt = callPackage ../development/python-modules/rdt { };
+
   re-assert = callPackage ../development/python-modules/re-assert { };
 
   readability-lxml = callPackage ../development/python-modules/readability-lxml { };
@@ -10152,6 +10162,8 @@ self: super: with self; {
 
   ruffus = callPackage ../development/python-modules/ruffus { };
 
+  rundoc = callPackage ../development/python-modules/rundoc { };
+
   runway-python = callPackage ../development/python-modules/runway-python { };
 
   ruuvitag-ble = callPackage ../development/python-modules/ruuvitag-ble { };
@@ -10305,6 +10317,12 @@ self: super: with self; {
   scs = callPackage ../development/python-modules/scs { };
 
   sdds = callPackage ../development/python-modules/sdds { };
+
+  sdgym = callPackage ../development/python-modules/sdgym { };
+
+  sdmetrics = callPackage ../development/python-modules/sdmetrics { };
+
+  sdv = callPackage ../development/python-modules/sdv { };
 
   sdnotify = callPackage ../development/python-modules/sdnotify { };
 
