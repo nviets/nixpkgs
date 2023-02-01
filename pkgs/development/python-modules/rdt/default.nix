@@ -9,6 +9,7 @@
 , scikit-learn
 , pytest-subtests
 , rundoc
+, pytest-runner
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -34,6 +35,7 @@ python3.pkgs.buildPythonPackage rec {
     scipy
     psutil
     scikit-learn
+    pytest-runner
   ];
 
   doCheck = false;

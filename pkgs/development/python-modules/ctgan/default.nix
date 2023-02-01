@@ -6,6 +6,10 @@
 , pandas
 , rdt
 , packaging
+, rundoc
+, pytest
+, pytest-cov
+, pytest-rerunfailures
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -20,12 +24,21 @@ python3.pkgs.buildPythonPackage rec {
     hash = "sha256-iwEO04uxoP7Kx5GmXo0dKFjcYhyTwDiImrFL9+kOWrU=";
   };
 
+  postPatch = ''
+    substituteInPlace setup.py \
+      --replace 'pytest-rerunfailures>=9.1.1,<10' 'pytest-rerunfailures>=9.1.1'
+  '';
+
   propagatedBuildInputs = [
     scikit-learn
     torch
     pandas
     rdt
     packaging
+    rundoc
+    pytest-cov
+    pytest-rerunfailures
+    pytest
   ];
 
   pythonImportsCheck = [ "ctgan" ];
