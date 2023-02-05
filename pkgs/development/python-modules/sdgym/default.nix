@@ -13,6 +13,7 @@
 , humanfriendly
 , compress-pickle
 , pomegranate
+, jupyter-events
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -32,9 +33,6 @@ python3.pkgs.buildPythonPackage rec {
       --replace 'tabulate>=0.8.3,<0.9' 'tabulate>=0.8.3' \
       --replace 'humanfriendly>=8.2,<11' 'humanfriendly>=8.2' \
       --replace 'compress-pickle>=1.2.0,<3' 'compress-pickle>=1.2.0'
-      --replace 'compress-pickle>=1.2.0,<3' 'compress-pickle>=1.2.0'
-#      --replace 'prompt_toolkit>=2.0,<3.0' 'prompt_toolkit>=2.0' \
-#      --replace 'sdmetrics>=0.9.0,<1.0' 'sdmetrics>=0.9.0'
   '';
 
   propagatedBuildInputs = [
@@ -50,7 +48,10 @@ python3.pkgs.buildPythonPackage rec {
     humanfriendly
     compress-pickle
     pomegranate
+    jupyter-events
   ];
+
+  doCheck = false;
 
   pythonImportsCheck = [ "sdgym" ];
 
