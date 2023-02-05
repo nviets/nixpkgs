@@ -10,26 +10,31 @@
 , boto3
 , tabulate
 , sdv
+, humanfriendly
+, compress-pickle
+, pomegranate
 }:
 
 python3.pkgs.buildPythonPackage rec {
   pname = "sdgym";
-  version = "0.5.0";
+  version = "0.6.0";
   format = "setuptools";
 
   src = fetchFromGitHub {
     owner = "sdv-dev";
     repo = "SDGym";
     rev = "v${version}";
-    hash = "sha256-HlzWjBTrsDrh+/GTVqZD/bCae2BUyaV3NrX4qQXfL9k=";
+    hash = "sha256-UoavpRY2v+S5OlhkQ/7wIla/1NHHe4Fg+Cv9XuJSi08=";
   };
 
   postPatch = ''
     substituteInPlace setup.py \
-      --replace 'prompt_toolkit>=2.0,<3.0' 'prompt_toolkit>=2.0' \
       --replace 'tabulate>=0.8.3,<0.9' 'tabulate>=0.8.3' \
-      --replace 'humanfriendly>=8.2,<11' 'humanfriendly>=8.2' sdmetrics>=0.9.0,<1.0
-      --replace 'sdmetrics>=0.9.0,<1.0' 'sdmetrics>=0.9.0'
+      --replace 'humanfriendly>=8.2,<11' 'humanfriendly>=8.2' \
+      --replace 'compress-pickle>=1.2.0,<3' 'compress-pickle>=1.2.0'
+      --replace 'compress-pickle>=1.2.0,<3' 'compress-pickle>=1.2.0'
+#      --replace 'prompt_toolkit>=2.0,<3.0' 'prompt_toolkit>=2.0' \
+#      --replace 'sdmetrics>=0.9.0,<1.0' 'sdmetrics>=0.9.0'
   '';
 
   propagatedBuildInputs = [
@@ -42,6 +47,9 @@ python3.pkgs.buildPythonPackage rec {
     boto3
     tabulate
     sdv
+    humanfriendly
+    compress-pickle
+    pomegranate
   ];
 
   pythonImportsCheck = [ "sdgym" ];

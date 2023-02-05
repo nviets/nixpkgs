@@ -1941,6 +1941,8 @@ self: super: with self; {
 
   compreffor = callPackage ../development/python-modules/compreffor { };
 
+  compress-pickle = callPackage ../development/python-modules/compress-pickle { };
+
   concurrent-log-handler = callPackage ../development/python-modules/concurrent-log-handler { };
 
   conda = callPackage ../development/python-modules/conda { };
