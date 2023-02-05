@@ -5,7 +5,11 @@
 , pandas
 , matplotlib
 , scipy
+, rundoc
+, pytest
+, pytest-cov
 , pytest-runner
+, pytest-rerunfailures
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -25,17 +29,32 @@ python3.pkgs.buildPythonPackage rec {
     pandas
     matplotlib
     scipy
+    rundoc
+    pytest
+    pytest-cov
     pytest-runner
+    pytest-rerunfailures
   ];
 
-  doCheck = false;
+  postPatch = ''
+    substituteInPlace setup.py \
+      --replace 'pytest-rerunfailures>=9.0.0,<10' 'pytest-rerunfailures>=9.0.0' \
+      --replace 'pytest-cov>=2.6.0,<3' 'pytest-cov>=2.6.0' \
+      --replace 'pytest>=6.2.5,<7' 'pytest>=6.2.5'
+  '';
+
+  checkInputs = [ pytest ];
+
+  checkPhase = ''
+    pytest tests/ --ignore=tests/end-to-end/test_visualization.py;
+  '';
 
   pythonImportsCheck = [ "copulas" ];
 
   meta = with lib; {
     description = "A library to model multivariate data using copulas";
     homepage = "git@github.com:sdv-dev/Copulas.git";
-    license = with licenses; [ ];
-    maintainers = with maintainers; [ ];
+    license = with licenses; [ bsl11 ];
+    maintainers = with maintainers; [ nviets ];
   };
 }

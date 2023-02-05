@@ -7,10 +7,9 @@
 , scipy
 , psutil
 , scikit-learn
-, pytest-subtests
 , rundoc
-, pytest-runner
 , jupyter
+, copulas
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -36,15 +35,14 @@ python3.pkgs.buildPythonPackage rec {
     scipy
     psutil
     scikit-learn
-    pytest-runner
     jupyter
+    copulas
   ];
 
-  #doCheck = false;
-
-  nativeCheckInputs = [
-    pytest-subtests
-  ];
+  # RDT's unit tests are intermingled with paid addons that 
+  # cause tests to fail. See:
+  # - https://docs.sdv.dev/rdt/transformers-glossary/premium-add-ons
+  doCheck = false;
 
   pythonImportsCheck = [ "rdt" ];
 
