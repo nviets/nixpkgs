@@ -10,6 +10,7 @@
 , graphviz
 , cloudpickle
 , faker
+, jupyter-events
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -38,16 +39,15 @@ python3.pkgs.buildPythonPackage rec {
     deepecho
     cloudpickle
     faker
+    jupyter-events
   ];
-
-  doCheck = false;
 
   pythonImportsCheck = [ "sdv" ];
 
   meta = with lib; {
     description = "Synthetic Data Generation for tabular, relational and time series data";
     homepage = "git@github.com:sdv-dev/SDV.git";
-    license = with licenses; [ ];
-    maintainers = with maintainers; [ ];
+    license = with licenses; [ bsl11 ];
+    maintainers = with maintainers; [ nviets ];
   };
 }

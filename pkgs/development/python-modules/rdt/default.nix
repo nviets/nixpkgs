@@ -10,6 +10,7 @@
 , pytest-subtests
 , rundoc
 , pytest-runner
+, jupyter
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -36,9 +37,10 @@ python3.pkgs.buildPythonPackage rec {
     psutil
     scikit-learn
     pytest-runner
+    jupyter
   ];
 
-  doCheck = false;
+  #doCheck = false;
 
   nativeCheckInputs = [
     pytest-subtests
@@ -49,7 +51,7 @@ python3.pkgs.buildPythonPackage rec {
   meta = with lib; {
     description = "A library of Reversible Data Transforms";
     homepage = "git@github.com:sdv-dev/RDT.git";
-    license = with licenses; [ ];
-    maintainers = with maintainers; [ ];
+    license = with licenses; [ bsl11 ];
+    maintainers = with maintainers; [ nviets ];
   };
 }

@@ -51,14 +51,18 @@ python3.pkgs.buildPythonPackage rec {
     jupyter-events
   ];
 
-  doCheck = false;
+  # Otherwise tests will fail to create directory
+  # Permission denied: '/homeless-shelter'
+  preCheck = ''
+    export HOME=$(mktemp -d)
+  '';
 
   pythonImportsCheck = [ "sdgym" ];
 
   meta = with lib; {
     description = "Benchmarking synthetic data generation methods";
     homepage = "git@github.com:sdv-dev/SDGym.git";
-    license = licenses.mit;
-    maintainers = with maintainers; [ ];
+    license = licenses.bsl11;
+    maintainers = with maintainers; [ nviets ];
   };
 }
