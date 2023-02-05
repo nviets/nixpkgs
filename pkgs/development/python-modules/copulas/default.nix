@@ -5,6 +5,7 @@
 , pandas
 , matplotlib
 , scipy
+, pytest-runner
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -24,6 +25,7 @@ python3.pkgs.buildPythonPackage rec {
     pandas
     matplotlib
     scipy
+    pytest-runner
   ];
 
   doCheck = false;

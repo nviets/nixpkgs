@@ -21,7 +21,8 @@ python3.pkgs.buildPythonPackage rec {
     owner = "eclecticiq";
     repo = "rundoc";
     rev = "${version}";
-    hash = "sha256-InXao+NaOqGHAUoOUP6TNCuSl30zqTsGJ8Rt4dO+cuI=";
+    #hash = "sha256-InXao+NaOqGHAUoOUP6TNCuSl30zqTsGJ8Rt4dO+cuI=";
+    hash = "sha256-a/dKTXMiOQ6x5OsJ+MdYheyXsQIC1BY4vBtobR9y7bE=";
   };
 
   postPatch = ''
