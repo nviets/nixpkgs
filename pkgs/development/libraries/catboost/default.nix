@@ -2,6 +2,7 @@
 , stdenv
 , lib
 , fetchFromGitHub
+, python3
 , R
 , rPackages
 #, cmake
@@ -24,18 +25,35 @@ stdenv.mkDerivation rec {
     hash = "sha256-bqnUHTTRan/spA5y4LRt/sIUYpP3pxzdN/4wHjzgZVY=";
   };
 
-  nativeBuildInputs = [ R rPackages.devtools ];
+  nativeBuildInputs = [ python3 R rPackages.devtools ];
 
   propagatedBuildInputs = [
     rPackages.jsonlite
   ];
 
-  preBuild = ''
-    cd catboost/R-package
+  postPatch = ''
+    substituteInPlace catboost/R-package/mk_package.py --replace ", '--build', "          ", '--build', '-l $out/library', "
+    #substituteInPlace catboost/R-package/mk_package.py --replace ", '--install-tests', '--no-multiarch', '--with-keep.source'"          ""
+    #substituteInPlace catboost/R-package/mk_package.py --replace ", self.r_dir, "          ", '-l $out/library', self.r_dir, "
   '';
 
-  buildPhase = ''
-    R -e "devtools::build(); devtools::install()"
+  configurePhase = ''
+    runHook preConfigure
+    export R_LIBS_SITE="$R_LIBS_SITE''${R_LIBS_SITE:+:}$out/library"
+    runHook postConfigure
+  '';
+
+  installPhase = ''
+    export R_LIBS_SITE="$out/library:$R_LIBS_SITE''${R_LIBS_SITE:+:}"
+    ls
+    ls build
+    cd catboost/R-package
+    mkdir -p $out
+    mkdir -p $out/library
+    export R_LIBS_SITE="$R_LIBS_SITE''${R_LIBS_SITE:+:}$out/library"
+    #R -e "devtools::build(); withr::with_libpaths('$out/library'); devtools::install()"
+    python mk_package.py --build-with-r
+    ls
   '';
 
   postFixup = ''
