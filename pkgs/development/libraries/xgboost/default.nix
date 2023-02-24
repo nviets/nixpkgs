@@ -8,6 +8,7 @@
 , cudaSupport ? config.cudaSupport or false
 , ncclSupport ? false
 , rLibrary ? false
+, x86marchSupport ? false
 , cudaPackages
 , llvmPackages
 , R
@@ -62,6 +63,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = lib.optionals doCheck [ "-DGOOGLE_TEST=ON" ]
+    ++ lib.optionals x86marchSupport [ "--with-arch_64=" ]
     ++ lib.optionals cudaSupport [
     "-DUSE_CUDA=ON"
     # Their CMakeLists.txt does not respect CUDA_HOST_COMPILER, instead using the CXX compiler.
