@@ -6,9 +6,15 @@
 , gtest
 , doCheck ? true
 , cudaSupport ? config.cudaSupport or false
+, enableAvx ? stdenv.hostPlatform.avxSupport
+, enableAvx2 ? stdenv.hostPlatform.avx2Support
+, enableAvx512 ? stdenv.hostPlatform.avx512Support
+, enableSse41 ? stdenv.hostPlatform.sse4_1Support
+, enableSse42 ? stdenv.hostPlatform.sse4_2Support
+, enableFma ? stdenv.hostPlatform.fmaSupport
+, enableFma4 ? stdenv.hostPlatform.fma4Support
 , ncclSupport ? false
 , rLibrary ? false
-, x86marchSupport ? false
 , cudaPackages
 , llvmPackages
 , R
@@ -62,8 +68,16 @@ stdenv.mkDerivation rec {
     rPackages.Matrix
   ];
 
+  configureFlags = [ ]
+    ++ lib.optional enableSse41 "--with-sse41"
+    ++ lib.optional enableSse42 "--with-sse42"
+    ++ lib.optional enableAvx "--with-avx"
+    ++ lib.optional enableAvx2 "--with-avx2"
+    ++ lib.optional enableFma "--with-fma"
+    ++ lib.optional enableFma4 "--with-fma4"
+    ++ lib.optional enableAvx512 "--with-avx512";
+
   cmakeFlags = lib.optionals doCheck [ "-DGOOGLE_TEST=ON" ]
-    ++ lib.optionals x86marchSupport [ "--with-arch_64=" ]
     ++ lib.optionals cudaSupport [
     "-DUSE_CUDA=ON"
     # Their CMakeLists.txt does not respect CUDA_HOST_COMPILER, instead using the CXX compiler.
