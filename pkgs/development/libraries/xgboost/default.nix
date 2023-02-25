@@ -13,6 +13,7 @@
 , enableSse42 ? stdenv.hostPlatform.sse4_2Support
 , enableFma ? stdenv.hostPlatform.fmaSupport
 , enableFma4 ? stdenv.hostPlatform.fma4Support
+, enableMarch ? false
 , ncclSupport ? false
 , rLibrary ? false
 , cudaPackages
@@ -75,7 +76,8 @@ stdenv.mkDerivation rec {
     ++ lib.optional enableAvx2 "--with-avx2"
     ++ lib.optional enableFma "--with-fma"
     ++ lib.optional enableFma4 "--with-fma4"
-    ++ lib.optional enableAvx512 "--with-avx512";
+    ++ lib.optional enableAvx512 "--with-avx512"
+    ++ lib.optional enableMarch "--with-arch_64=x86-64-v4";
 
   cmakeFlags = lib.optionals doCheck [ "-DGOOGLE_TEST=ON" ]
     ++ lib.optionals cudaSupport [
