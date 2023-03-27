@@ -176,6 +176,11 @@
     "https://cflags.cc/roy/"
   ];
 
+  # RStudio
+  rstudio = [
+    "https://s3.amazonaws.com/rstudio-ide-build/"
+  ];
+
   # Sage mirrors (https://www.sagemath.org/mirrors.html)
   sageupstream = [
     # Africa (HTTPS)

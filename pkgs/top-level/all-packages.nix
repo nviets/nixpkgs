@@ -33032,6 +33032,8 @@ with pkgs;
 
   rstudio-server = rstudio.override { server = true; };
 
+  rstudio-pro = callPackage ../applications/editors/rstudio-pro { };
+
   rsync = callPackage ../applications/networking/sync/rsync (config.rsync or {});
   rrsync = callPackage ../applications/networking/sync/rsync/rrsync.nix {};
 
