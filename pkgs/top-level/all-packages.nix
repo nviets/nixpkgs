@@ -33032,7 +33032,9 @@ with pkgs;
 
   rstudio-server = rstudio.override { server = true; };
 
-  rstudio-pro = callPackage ../applications/editors/rstudio-pro { };
+  posit-workbench = callPackage ../applications/editors/posit-workbench { };
+  workbench = callPackage ../applications/editors/posit-workbench/workbench.nix { };
+  rsp-session = callPackage ../applications/editors/posit-workbench/rsp-session.nix { };
 
   rsync = callPackage ../applications/networking/sync/rsync (config.rsync or {});
   rrsync = callPackage ../applications/networking/sync/rsync/rrsync.nix {};

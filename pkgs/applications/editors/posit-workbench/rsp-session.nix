@@ -1,5 +1,5 @@
 { lib, stdenv, fetchzip, patchelf, glibc, glib, autoPatchelfHook, makeWrapper, zlib, 
-gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash, libuser } :
+gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash } :
 stdenv.mkDerivation rec {
   name = "rsp-session";
   version = "rhel8-2023.05.0-daily-130.pro2-x86_64";
@@ -41,7 +41,7 @@ stdenv.mkDerivation rec {
       --replace "/bin/bash" "${lib.makeBinPath [ bash ]}/bash"
 
     wrapProgram "$out/opt/rsp-session/bin/rserver-launcher" \
-      --set LD_LIBRARY_PATH "${lib.makeLibraryPath [ sssd libuser ]}"
+      --set LD_LIBRARY_PATH "${lib.makeLibraryPath [ sssd ]}"
 
     wrapProgram "$out/opt/rsp-session/bin/rsession" \
       --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [ stdenv.cc.cc.lib sssd ]}"
@@ -57,6 +57,6 @@ stdenv.mkDerivation rec {
 
     license = with lib.licenses; [ unfree ];
     platforms = [ "x86_64-linux" ];
-    maintainers = [ nviets ];
+    maintainers = [ "nviets" ];
   };
 }
