@@ -2,11 +2,11 @@
 gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash } :
 stdenv.mkDerivation rec {
   name = "rsp-session";
-  version = "rhel8-2023.05.0-daily-92.pro3-x86_64";
+  version = "jammy-2023.05.0-daily-92.pro3-arm64";
 
   # Find matching version on https://dailies.rstudio.com/rstudio/
   src = fetchzip {
-    url = "mirror://rstudio/session/rhel8/x86_64/rsp-session-${version}.tar.gz";
+    url = "mirror://rstudio/session/jammy-arm64/rsp-session-${version}.tar.gz";
     sha256 = "sha256-YhtqRS6OyfFbji2Fg7yZbUNxYDUp2gVrS7M6ZllnltU=";
   };
 
@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     description = "RStudio Server Pro Session Components";
 
     license = with lib.licenses; [ unfree ];
-    platforms = [ "x86_64-linux" ];
+    #platforms = [ "x86_64-linux" "aarch64-linux" "" ];
     maintainers = [ "nviets" ];
   };
 }

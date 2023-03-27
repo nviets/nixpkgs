@@ -1,17 +1,18 @@
-{ lib, stdenv, fetchurl, rpmextract, patchelf, glibc, glib, autoPatchelfHook, makeWrapper, zlib, 
+{ lib, stdenv, fetchurl, dpkg, patchelf, glibc, glib, autoPatchelfHook, makeWrapper, zlib, 
 gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash } :
 stdenv.mkDerivation rec {
   name = "posit-workbench";
-  version = "rhel-2023.05.0-daily-92.pro3-x86_64";
+  version = "jammy-2023.05.0-daily-92.pro3-arm64";
 
   # Find matching version on https://dailies.rstudio.com/rstudio/
   src = fetchurl {
-    url = "mirror://rstudio/server/rhel8/x86_64/rstudio-workbench-${version}.rpm";
-    sha256 = "sha256-cPQWkV5hYGG3sFnQ8pXOlD4W25yR4B74ygz5zPuWNOs=";
+    url = "mirror://rstudio/server/jammy-arm64/rstudio-workbench-${version}.deb";
+    sha256 = "sha256-cPQWkV5hYGG3sFnQ8pXOlD4W25yR4B74ygz5zPuWNss=";
   };
 
   nativeBuildInputs = [
     autoPatchelfHook
+    dpkg
     makeWrapper
     glib
     gfortran
@@ -19,7 +20,6 @@ stdenv.mkDerivation rec {
     openssl_3_0
     pam
     postgresql
-    rpmextract
     sqlite
     zlib
     sssd
@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
 
   #sourceRoot = ".";
   unpackPhase = ''
-    ${rpmextract}/bin/rpmextract $src
+    dpkg-deb $src
   '';
   # phases = [ "installPhase" ];
 
@@ -60,7 +60,7 @@ stdenv.mkDerivation rec {
     description = "Posit Workbench";
 
     license = with lib.licenses; [ unfree ];
-    platforms = [ "x86_64-linux" ];
+    #platforms = [ "x86_64-linux" ];
     maintainers = [ "nviets" ];
   };
 }
