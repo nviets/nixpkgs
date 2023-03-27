@@ -1,13 +1,13 @@
-{ lib, stdenv, fetchzip, patchelf, glibc, glib, autoPatchelfHook, makeWrapper, zlib, 
+{ lib, stdenv, fetchurl, rpmextract, patchelf, glibc, glib, autoPatchelfHook, makeWrapper, zlib, 
 gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash } :
 stdenv.mkDerivation rec {
   name = "posit-workbench";
-  version = "rhel-2023.05.0-daily-130.pro2-x86_64";
+  version = "rhel-2023.05.0-daily-92.pro3-x86_64";
 
   # Find matching version on https://dailies.rstudio.com/rstudio/
-  src = fetchzip {
-    url = "mirror://rstudio/session/rhel8-x86_64/rstudio-workbench-${version}.tar.gz";
-    sha256 = "sha256:1lw7vi8sdbbizwmprmn3lizflmx8vgibh37b4mmiprzbjnpw3dvl";
+  src = fetchurl {
+    url = "mirror://rstudio/server/rhel8/x86_64/rstudio-workbench-${version}.rpm";
+    sha256 = "sha256-cPQWkV5hYGG3sFnQ8pXOlD4W25yR4B74ygz5zPuWNOs=";
   };
 
   nativeBuildInputs = [
@@ -19,6 +19,7 @@ stdenv.mkDerivation rec {
     openssl_3_0
     pam
     postgresql
+    rpmextract
     sqlite
     zlib
     sssd
@@ -27,6 +28,10 @@ stdenv.mkDerivation rec {
 
   autoPatchelfIgnoreMissingDeps = true;
 
+  #sourceRoot = ".";
+  unpackPhase = ''
+    ${rpmextract}/bin/rpmextract $src
+  '';
   # phases = [ "installPhase" ];
 
   installPhase = ''
@@ -35,7 +40,6 @@ stdenv.mkDerivation rec {
     mkdir -p "$out/rstudio"
     #cp -r "$src" "$out/rstudio"
     cp -r * "$out/rstudio"
-    chmod -R +w "$out/opt/rsp-session"
 
     #substituteInPlace "$out/opt/rsp-session/bin/rsession-run"  \
     #  --replace "/bin/bash" "${lib.makeBinPath [ bash ]}/bash"

@@ -2,12 +2,12 @@
 gfortran, pam, openssl_3_0, libuuid, sqlite, postgresql, sssd, bash } :
 stdenv.mkDerivation rec {
   name = "rsp-session";
-  version = "rhel8-2023.05.0-daily-130.pro2-x86_64";
+  version = "rhel8-2023.05.0-daily-92.pro3-x86_64";
 
   # Find matching version on https://dailies.rstudio.com/rstudio/
   src = fetchzip {
-    url = "mirror://rstudio/session/rhel8-x86_64/rsp-session-${version}.tar.gz";
-    sha256 = "sha256:1lw7vi8sdbbizwmprmn3lizflmx8vgibh37b4mmiprzbjnpw3dvl";
+    url = "mirror://rstudio/session/rhel8/x86_64/rsp-session-${version}.tar.gz";
+    sha256 = "sha256-YhtqRS6OyfFbji2Fg7yZbUNxYDUp2gVrS7M6ZllnltU=";
   };
 
   nativeBuildInputs = [
