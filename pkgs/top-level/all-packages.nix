@@ -6807,6 +6807,8 @@ with pkgs;
 
   downonspot = callPackage ../applications/misc/downonspot { };
 
+  dpcpp = callPackage ../development/compilers/dpcpp { };
+
   sl1-to-photon = python3Packages.callPackage ../applications/misc/sl1-to-photon { };
 
   slade = callPackage ../applications/misc/slade {
