@@ -6,7 +6,40 @@
 , ninja
 , python3
 }:
-
+let
+  vc-intrinsics = fetchFromGitHub {
+    owner = "intel";
+    repo = "vc-intrinsics";
+    #rev = "v0.3.0";
+    rev = "3ac855c9253d608a36d10b8ff87e62aa413bbf23";
+    #hash = "sha256-1Rm4TCERTOcPGWJF+yNoKeB9x3jfqnh7Vlv+0Xpmjbk=";
+    hash = "sha256-i5A8R/EMXbjvghq+JRITDJi+FVH+lSy07qstNF2LVUc=";
+  };
+  ocl-headers = fetchFromGitHub {
+    owner = "KhronosGroup";
+    repo = "OpenCL-Headers";
+    rev = "v2023.02.06";
+    hash = "sha256-BJDaDokyHgmyl+bGqCwG1J7iOvu0E3P3iYZ1/krot8s=";
+  };
+  ocl-loader = fetchFromGitHub {
+    owner = "KhronosGroup";
+    repo = "OpenCL-ICD-Loader";
+    rev = "v2023.02.06";
+    hash = "sha256-uWPwGznfqH0xvrpnVNdDn3H3tnAfJt9A3m6av0xlq7I=";
+  };
+  spirv = fetchFromGitHub {
+    owner = "KhronosGroup";
+    repo = "SPIRV-Headers";
+    rev = "sdk-1.3.243.0";
+    hash = "sha256-VOq3r6ZcbDGGxjqC4IoPMGC5n1APUPUAs9xcRzxdyfk=";
+  };
+  mp11 = fetchFromGitHub {
+    owner = "boostorg";
+    repo = "mp11";
+    rev = "boost-1.81.0";
+    hash = "sha256-rPr7uVGAc4x8vwbx/LhhWH6pcH2t9mS2q9WVL8vpTwQ=";
+  };
+in
 stdenv.mkDerivation rec {
   pname = "dpcpp";
   version = "20230406";
@@ -16,29 +49,30 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "intel";
     repo = "llvm";
-    #rev = "refs/tags/sycl-nightly/${version}";
-    #rev = "5f036799f4d39c1aa5a6fac0e972050373e9fa78";
     rev = "cb91c232c661829b327c7e6e8232eb1d79100a98";
-    hash = "sha256-abR9JhWCvwa+X/0y5mCGUsa+/3MUponHkjMO/XdYN8s=";
+    hash = "sha256-uchUba3llgT+zJTNb2F/tBMuJJnJw+L/00vhfTwMBTQ=";
     deepClone = true;
   };
 
-  patchPhase = ''
-    ls
-  '';
-
-  configurePhase = ''
-    ls llvm
-    python llvm/buildbot/configure.py
-    #python src/llvm/buildbot/compile.py
-  '';
-
   nativeBuildInputs = [
     cmake
-    #ninja
+    ninja
     python3
   ];
 
+  configurePhase = ''
+    substituteInPlace buildbot/configure.py \
+      --replace '"cmake",' '"cmake", "-DLLVMGenXIntrinsics_SOURCE_DIR=${vc-intrinsics}", "-DOpenCL_HEADERS=${ocl-headers}", "-DOpenCL_LIBRARY_SRC=${ocl-loader}", "-DBOOST_MP11_SOURCE_DIR=${mp11}", "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${spirv}"'
+    echo START
+    python buildbot/configure.py
+    echo FINISH
+  '';
+
+  buildPhase = ''
+    python buildbot/compile.py
+  '';
+
+  #NIX_CFLAGS_COMPILE = [ "-DSYCL_USE_LIBCXX=ON" "-DLLVMGenXIntrinsics_SOURCE_DIR=${vc-intrinsics}" ];
   #NIX_CFLAGS_COMPILE = [ "-DSYCL_USE_LIBCXX=ON" ];
   # Fix build with modern gcc
   # In member function 'void std::__atomic_base<_IntTp>::store(__int_type, std::memory_order) [with _ITp = bool]',
