@@ -5,7 +5,7 @@
 , cmake
 , ninja
 , python3
-, spirv-headers
+#, spirv-headers
 #, level-zero
 }:
 let
@@ -28,6 +28,12 @@ let
     repo = "OpenCL-ICD-Loader";
     rev = "v2023.02.06";
     hash = "sha256-uWPwGznfqH0xvrpnVNdDn3H3tnAfJt9A3m6av0xlq7I=";
+  };
+  spirv-headers = fetchFromGitHub {
+    owner = "KhronosGroup";
+    repo = "SPIRV-Headers";
+    rev = "1feaf4414eb2b353764d01d88f8aa4bcc67b60db";
+    hash = "sha256-VOq3r6ZcbDGGxjqC4IoPMGC5n1APUPUAs9xcRzxdyfk=";
   };
   mp11 = fetchFromGitHub {
     owner = "boostorg";
@@ -68,7 +74,7 @@ stdenv.mkDerivation rec {
     cmake
     ninja
     python3
-    spirv-headers
+    #spirv-headers
     #level-zero
   ];
 
@@ -94,6 +100,11 @@ stdenv.mkDerivation rec {
 
   buildPhase = ''
     python buildbot/compile.py
+  '';
+
+  installPhase = ''
+    mkdir $out
+    cp -r * $out
   '';
 
   #NIX_CFLAGS_COMPILE = [ "-DSYCL_USE_LIBCXX=ON" "-DLLVMGenXIntrinsics_SOURCE_DIR=${vc-intrinsics}" ];
