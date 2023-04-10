@@ -5,6 +5,9 @@
 , cmake
 , pkg-config
 , ncurses
+, libXau
+#, qt6
+#, qt6Packages
 }:
 stdenv.mkDerivation rec {
   pname = "oneapi";
@@ -22,9 +25,14 @@ stdenv.mkDerivation rec {
   '';
 
   nativeBuildInputs = [
+    stdenv
+    stdenv.cc.cc.lib
     cmake
     pkg-config
     ncurses
+    libXau
+    #qt6.qtbase
+    #qt6Packages.wrapQtAppsHook
   ];
 
   configurePhase = ''
@@ -38,10 +46,21 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir $out
     sh ${src} \
-      -a install \
-      -c \
-      --eula accept \
-      --install-dir $out
+      -x -f $out
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib64/ld-linux-x86-64.so.2 $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/bootstrapper
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/ld-linux-x86-64.so.2 $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/plugins/platforms/libqxcb.so
+    for f in $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/lib/* $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/bootstrapper
+    do
+      patchelf --set-rpath ${stdenv.cc.cc.lib}/lib64:${stdenv.cc.cc.lib}/lib:${libXau}/lib:$out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/lib $f
+    done
+
+#    ldd $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/bootstrapper
+
+#    sh $out/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline/bootstrapper \
+#      -s \
+#      -a install \
+#      --eula=accept \
+#      --install-dir $out
     #cp -r * $out
   '';
 
