@@ -26,6 +26,8 @@ stdenv.mkDerivation rec {
     tbb
   ];
 
+  cmakeFlags = [ "-DCMAKE_CXX_COMPILER=${dpcpp}/bin/dpcpp" ]
+
   # Fix build with modern gcc
   # In member function 'void std::__atomic_base<_IntTp>::store(__int_type, std::memory_order) [with _ITp = bool]',
   #NIX_CFLAGS_COMPILE = lib.optionals stdenv.cc.isGNU [ "-Wno-error=stringop-overflow" ] ++
