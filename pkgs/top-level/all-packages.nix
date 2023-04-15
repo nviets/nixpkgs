@@ -22807,6 +22807,8 @@ with pkgs;
 
   one_gadget = callPackage ../development/tools/misc/one_gadget { };
 
+  oneapi = callPackage ../development/libraries/oneapi { };
+
   oneDNN = callPackage ../development/libraries/oneDNN { };
 
   onedrive = callPackage ../applications/networking/sync/onedrive { };
