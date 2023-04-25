@@ -131,14 +131,19 @@ stdenv.mkDerivation rec {
       runHook postInstall
     '';
 
+  preFixup = lib.optionalString javaWrapper ''
+    echo PATCHING
+    patchelf --add-needed $out/com/microsoft/ml/lightgbm/linux/x86_64/lib_lightgbm.so $out/com/microsoft/ml/lightgbm/linux/x86_64/lib_lightgbm_swig.so
+    echo DONEPATCHING
+  '';
+
+  fixupPhase = lib.optionalString javaWrapper ''
+  '';
+
   postFixup = lib.optionalString rLibrary ''
     if test -e $out/nix-support/propagated-build-inputs; then
         ln -s $out/nix-support/propagated-build-inputs $out/nix-support/propagated-user-env-packages
     fi
-  '' + lib.optionalString javaWrapper ''
-    # broken
-    #install_name_tool -change @rpath/lib_lightgbm.so $out/lib/lib_lightgbm.so $out/lib/lib_lightgbm_swig.so
-    patchelf --set-rpath $out/lib/lib_lightgbm.so $out/lib/lib_lightgbm_swig.so
   '';
 
   meta = with lib; {
