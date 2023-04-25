@@ -51,6 +51,7 @@ stdenv.mkDerivation rec {
   ];
 
   # Skip APPLE in favor of linux build for .so files
+  # The HDFS build needs limits for numeric_limits
   postPatch = ''
     export PROJECT_SOURCE_DIR=./
     substituteInPlace CMakeLists.txt \
@@ -66,6 +67,11 @@ stdenv.mkDerivation rec {
       --replace \
         "install_args <- c(\"CMD\", \"INSTALL\", \"--no-multiarch\", \"--with-keep.source\", tarball)" \
         "install_args <- c(\"CMD\", \"INSTALL\", \"--no-multiarch\", \"--with-keep.source\", \"-l $out/library\", tarball)"
+  '' + lib.optionalString (hdfsSupport) ''
+    substituteInPlace include/LightGBM/utils/file_io.h \
+      --replace "#include <vector>" \
+        '#include <vector>
+        #include <limits>'
   '';
 
   cmakeFlags = lib.optionals doCheck [ "-DBUILD_CPP_TEST=ON" ]
@@ -74,8 +80,8 @@ stdenv.mkDerivation rec {
     ++ lib.optionals mpiSupport [ "-DUSE_MPI=ON" ]
     ++ lib.optionals hdfsSupport [
       "-DUSE_HDFS=ON"
-      "-DHDFS_LIB=${hadoop}/lib/hadoop-3.3.1/lib/native/libhdfs.so"
-      "-DHDFS_INCLUDE_DIR=${hadoop}/lib/hadoop-3.3.1/include" ]
+      "-DHDFS_LIB=${hadoop}/lib/hadoop-${hadoop.version}/lib/native/libhdfs.so"
+      "-DHDFS_INCLUDE_DIR=${hadoop}/lib/hadoop-${hadoop.version}/include" ]
     ++ lib.optionals javaWrapper [ "-DUSE_SWIG=ON" ]
     ++ lib.optionals rLibrary [ "-D__BUILD_FOR_R=ON" ];
 
