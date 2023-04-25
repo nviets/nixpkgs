@@ -135,6 +135,10 @@ stdenv.mkDerivation rec {
     if test -e $out/nix-support/propagated-build-inputs; then
         ln -s $out/nix-support/propagated-build-inputs $out/nix-support/propagated-user-env-packages
     fi
+  '' + lib.optionalString javaWrapper ''
+    # broken
+    #install_name_tool -change @rpath/lib_lightgbm.so $out/lib/lib_lightgbm.so $out/lib/lib_lightgbm_swig.so
+    patchelf --set-rpath $out/lib/lib_lightgbm.so $out/lib/lib_lightgbm_swig.so
   '';
 
   meta = with lib; {
