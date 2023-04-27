@@ -1031,6 +1031,14 @@ let
       '';
     });
 
+    torch = old.torch.overrideAttrs (attrs: {
+      postPatch = ''
+        substituteInPlace "R/install.R" \
+          --replace 'Sys.getenv("TORCH_HOME")' \
+            "Sys.getenv(\"TORCH_HOME\", unset = '${pkgs.lantern}')"
+      '';
+    });
+
     s2 = old.s2.overrideAttrs (attrs: {
       PKGCONFIG_CFLAGS = "-I${pkgs.openssl.dev}/include";
       PKGCONFIG_LIBS = "-Wl,-rpath,${lib.getLib pkgs.openssl}/lib -L${lib.getLib pkgs.openssl}/lib -lssl -lcrypto";
