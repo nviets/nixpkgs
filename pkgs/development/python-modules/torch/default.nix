@@ -41,6 +41,9 @@
 
   isPy3k, pythonOlder,
 
+  # include lantern library for R's torch library
+  rSupport ? false, lantern,
+
   # ROCm dependencies
   rocmSupport ? false,
   gpuTargets ? [ ],
@@ -283,7 +286,8 @@ in buildPythonPackage rec {
     pythonRelaxDepsHook
     removeReferencesTo
   ] ++ lib.optionals cudaSupport [ cudatoolkit_joined ]
-    ++ lib.optionals rocmSupport [ rocmtoolkit_joined ];
+    ++ lib.optionals rocmSupport [ rocmtoolkit_joined ]
+    ++ lib.optionals rSupport [ lantern ];
 
   buildInputs = [ blas blas.provider pybind11 ]
     ++ lib.optionals stdenv.isLinux [ linuxHeaders_5_19 ] # TMP: avoid "flexible array member" errors for now
@@ -376,6 +380,10 @@ in buildPythonPackage rec {
 
     substituteInPlace $dev/share/cmake/ATen/ATenConfig.cmake \
       --replace "/build/source/torch/include" "$dev/include"
+  '' + lib.optionalString rSupport ''
+    cp -r ${lantern}/include/lantern/* $dev/include
+    #ln -s ${lantern}/lib/liblantern* $lib/lib/
+    cp -r ${lantern}/lib/liblantern* $lib/lib/
   '';
 
   postFixup = lib.optionalString stdenv.isDarwin ''
@@ -391,6 +399,8 @@ in buildPythonPackage rec {
 
     install_name_tool -change @rpath/libtorch.dylib $lib/lib/libtorch.dylib $lib/lib/libshm.dylib
     install_name_tool -change @rpath/libc10.dylib $lib/lib/libc10.dylib $lib/lib/libshm.dylib
+  '' + lib.optionalString rSupport ''
+    install_name_tool -change @rpath/libc10.dylib $lib/lib/libc10.dylib $lib/lib/liblantern.dylib
   '';
 
   # Builds in 2+h with 2 cores, and ~15m with a big-parallel builder.

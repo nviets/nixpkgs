@@ -1031,11 +1031,13 @@ let
       '';
     });
 
-    torch = old.torch.overrideAttrs (attrs: {
+    torch = let
+      trch = pkgs.python3Packages.torch.override{ rSupport = true; };
+      in old.torch.overrideAttrs (attrs: {
       postPatch = ''
         substituteInPlace "R/install.R" \
           --replace 'Sys.getenv("TORCH_HOME")' \
-            "Sys.getenv(\"TORCH_HOME\", unset = '${pkgs.lantern}')"
+            "Sys.getenv(\"TORCH_HOME\", unset = '${trch}/lib/${pkgs.python3Packages.python.libPrefix}/site-packages/torch')"
       '';
     });
 

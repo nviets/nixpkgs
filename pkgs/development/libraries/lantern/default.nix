@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, cmake, python3Packages }:
+{ lib, stdenv, fetchFromGitHub, cmake }:
 
 
 stdenv.mkDerivation rec {
@@ -17,17 +17,7 @@ stdenv.mkDerivation rec {
     cd src/lantern
   '';
 
-  nativeBuildInputs = [ cmake python3Packages.torch ];
-
-  installPhase = ''
-    ls -lah
-    mkdir $out
-    mkdir $out/lib
-    cp -r ${python3Packages.pytorch}/lib/${python3Packages.python.libPrefix}/site-packages/torch/lib/* $out/lib/
-    cp -r ${python3Packages.pytorch}/lib/${python3Packages.python.libPrefix}/site-packages/torch/bin $out/
-    cp -r ${python3Packages.pytorch}/lib/${python3Packages.python.libPrefix}/site-packages/torch/include $out/
-    cp liblantern* $out/lib/
-  '';
+  nativeBuildInputs = [ cmake ];
 
   meta = with lib; {
     description = "Lantern provides a C API to libtorch";
