@@ -382,7 +382,6 @@ in buildPythonPackage rec {
       --replace "/build/source/torch/include" "$dev/include"
   '' + lib.optionalString rSupport ''
     cp -r ${lantern}/include/lantern/* $dev/include
-    #ln -s ${lantern}/lib/liblantern* $lib/lib/
     cp -r ${lantern}/lib/liblantern* $lib/lib/
   '';
 
