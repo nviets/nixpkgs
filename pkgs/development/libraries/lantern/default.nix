@@ -15,6 +15,7 @@ stdenv.mkDerivation rec {
 
   preConfigure = ''
     cd src/lantern
+    substituteInPlace
   '';
 
   nativeBuildInputs = [ cmake ];

@@ -42,7 +42,7 @@
   isPy3k, pythonOlder,
 
   # include lantern library for R's torch library
-  rSupport ? false, lantern,
+  rSupport ? false,
 
   # ROCm dependencies
   rocmSupport ? false,
@@ -133,6 +133,14 @@ let
       rocm-runtime rocm-opencl-runtime hipify
     ];
   };
+
+  lantern = fetchFromGitHub {
+    owner = "mlverse";
+    repo = "torch";
+    rev = "v0.10.0";
+    sha256 = "sha256-y375pH8ILw3bE1kQN+y8UlAgeYwXO+8mGnhZ155Ikb8=";
+    sparseCheckout = [ "src/lantern" ];
+  };
 in buildPythonPackage rec {
   pname = "torch";
   # Don't forget to update torch-bin to the same version.
@@ -192,6 +200,10 @@ in buildPythonPackage rec {
     substituteInPlace third_party/pocketfft/pocketfft_hdronly.h --replace '#if __cplusplus >= 201703L
     inline void *aligned_alloc(size_t align, size_t size)' '#if __cplusplus >= 201703L && 0
     inline void *aligned_alloc(size_t align, size_t size)'
+  '' + lib.optionalString rSupport ''
+    echo "if(BUILD_LANTERN)" >> CMakeLists.txt
+    echo "  add_subdirectory(lantern)" >> CMakeLists.txt
+    echo "endif()" >> CMakeLists.txt
   '';
 
   preConfigure = lib.optionalString cudaSupport ''
@@ -205,6 +217,12 @@ in buildPythonPackage rec {
     export PYTORCH_ROCM_ARCH="${gpuTargetString}"
     export CMAKE_CXX_FLAGS="-I${rocmtoolkit_joined}/include -I${rocmtoolkit_joined}/include/rocblas"
     python tools/amd_build/build_amd.py
+  '' + lib.optionalString rSupport ''
+    export BUILD_LANTERN=1
+    export TORCH_PATH=build/torch
+    cp -r ${lantern}/src/lantern .
+    echo HELLO
+    head lantern/CMakeLists.txt
   '';
 
   # Use pytorch's custom configurations
