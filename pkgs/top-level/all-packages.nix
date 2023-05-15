@@ -29436,6 +29436,8 @@ with pkgs;
 
   castor = callPackage ../applications/networking/browsers/castor { };
 
+  catboost = callPackage ../development/libraries/catboost { };
+
   catfs = callPackage ../os-specific/linux/catfs { };
 
   catgirl = callPackage ../applications/networking/irc/catgirl { };
