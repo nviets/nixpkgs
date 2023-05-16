@@ -53,7 +53,12 @@ stdenv.mkDerivation rec {
   #];
 
   # Skip APPLE in favor of linux build for .so files
-  postPatch = ''
+  patches = [
+    ./conan.patch
+  ];
+
+  preCongifure = ''
+    export HOME=$(mktemp -d)
   '';
 
   cmakeFlags = [ "-DCMAKE_BUILD_TYPE=Release" "-DPython3_ROOT_DIR=${python3}" ]; #lib.optionals doCheck [ "-DBUILD_CPP_TEST=ON" ]
