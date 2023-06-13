@@ -1561,6 +1561,8 @@ with pkgs;
 
   gabutdm = callPackage ../applications/networking/gabutdm { };
 
+  gaiasky = callPackage ../applications/science/astronomy/gaiasky { };
+
   gamemode = callPackage ../tools/games/gamemode {
     libgamemode32 = pkgsi686Linux.gamemode.lib;
   };
