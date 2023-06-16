@@ -23,7 +23,9 @@ let
     nativeBuildInputs = [ jdk perl gradle git ];
 
     buildPhase = ''
-      GRADLE_USER_HOME=$PWD gradle -Dorg.gradle.java.home=${jdk} --no-daemon jar
+      echo HELLOWORLD
+      #GRADLE_USER_HOME=$PWD gradle -Dorg.gradle.java.home=${jdk} --no-daemon jar
+      GRADLE_USER_HOME=$PWD ./gaiasky
     '';
 
     # Mavenize dependency paths
