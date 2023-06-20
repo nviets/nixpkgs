@@ -5,7 +5,7 @@ let
   version = "3.5.0-rc05";
 
   src_sha256 = "sha256-elG9gh8VdYiDM2AzkmM1hXAqjJBuA9LlSBPZGe7G9II=";
-  deps_outputHash = "sha256-Qfig/kHl3YDniR/URBxDO7mfuIMiqiVw451EC+l+S5U=";
+  deps_outputHash = "sha256-iS2PM8zkXPTXWbT9qs2jK79LMV/aTOvxLDtSY4tZ9ec=";
 
   jdk = openjdk;
   gradle = gradle_7;
@@ -24,8 +24,9 @@ let
 
     buildPhase = ''
       echo HELLOWORLD
-      #GRADLE_USER_HOME=$PWD gradle -Dorg.gradle.java.home=${jdk} --no-daemon jar
-      GRADLE_USER_HOME=$PWD ./gaiasky
+      ls
+      GRADLE_USER_HOME=$PWD gradle -Dorg.gradle.java.home=${jdk} --no-daemon jar
+      #GRADLE_USER_HOME=$PWD ./gradlew
     '';
 
     # Mavenize dependency paths
@@ -71,9 +72,14 @@ in stdenv.mkDerivation rec {
   inherit pname version src;
 
   nativeBuildInputs = [ makeWrapper jdk git gradle ];
+  gradleAction = if stdenv.isDarwin then "assemble" else "build";
 
   buildPhase = ''
+    runHook preBuild
+
     GRADLE_USER_HOME=$PWD gradle -Dorg.gradle.java.home=${jdk} --no-daemon --offline --init-script ${gradleInit} -x test build
+
+    runHook postBuild
   '';
 
   installPhase = ''
