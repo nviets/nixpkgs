@@ -473,6 +473,8 @@ with pkgs;
 
   banana-vera = callPackage ../development/tools/analysis/banana-vera { };
 
+  chapel = callPackage ../development/compilers/chapel { };
+
   chrysalis = callPackage ../applications/misc/chrysalis { };
 
   ciel = callPackage ../tools/package-management/ciel { };
