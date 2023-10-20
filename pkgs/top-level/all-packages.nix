@@ -26220,6 +26220,8 @@ with pkgs;
     asterisk asterisk-stable asterisk-lts
     asterisk_18 asterisk_20;
 
+  arkouda = callPackage ../servers/computing/arkouda { };
+
   asterisk-module-sccp = callPackage ../servers/asterisk/sccp { };
 
   asterisk-ldap = lowPrio (asterisk.override { ldapSupport = true; });
