@@ -1,4 +1,5 @@
-{ lib, stdenv, fetchFromGitHub, pkg-config, chapel}:
+{ lib, stdenv, fetchFromGitHub, pkg-config
+, chapel, zeromq, hdf5, arrow-cpp, iconv, libiconv, glibc, libidn2, gmp}:
 
 stdenv.mkDerivation rec {
   pname = "arkouda";
@@ -16,7 +17,26 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ pkg-config ];
 
-  buildInputs = [ chapel ];
+  preConfigure = ''
+    export ARKOUDA_ZMQ_PATH=${zeromq}
+    export ARKOUDA_HDF5_PATH=${hdf5.dev}
+    export ARKOUDA_ARROW_PATH=${arrow-cpp}
+    export ARKOUDA_ICONV_PATH=${libiconv}
+    export ARKOUDA_IDN2_PATH=${libidn2}
+    export ARKOUDA_SKIP_CHECK_DEPS=yes
+  '';
+
+  cmakeFlags = [
+    "-DARKOUDA_ZMQ_PATH=${zeromq}"
+    "-DARKOUDA_HDF5_PATH=${hdf5.dev}"
+    "-DARKOUDA_ARROW_PATH=${arrow-cpp}"
+    "-DARKOUDA_ICONV_PATH=${libiconv}"
+    "-DARKOUDA_IDN2_PATH=${libidn2}"
+  ];
+
+  buildInputs = [ chapel zeromq hdf5.dev arrow-cpp iconv libiconv glibc libidn2 ];
+
+  propagatedBuildInputs = [ gmp ];
 
   meta = with lib; {
     changelog = "https://github.com/Bears-R-Us/arkouda/releases/tag/v${version}";
