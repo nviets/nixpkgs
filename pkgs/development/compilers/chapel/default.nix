@@ -236,6 +236,8 @@ llvmPackages.stdenv.mkDerivation rec {
     which
   ];
 
+  propagatedBuildInputs = [ gmp ];
+
   meta = {
     description = "a Productive Parallel Programming Language";
     homepage = "https://chapel-lang.org/";
