@@ -14,12 +14,11 @@ stdenv.mkDerivation rec {
     hash = "sha256-4ckae0X+pjP30/B7r9l1eW+iaxi2BPqyj2sgyt83LiY=";
   };
 
-  #outputs = [ "out" ];
-
   preConfigure = ''
     export ARKOUDA_ZMQ_PATH=${zeromq}
     export ARKOUDA_HDF5_PATH=${hdf5.dev}
     export ARKOUDA_ARROW_PATH=${arrow-cpp}
+    # need to work out iconv stuff. why libiconvReal?
     #export ARKOUDA_ICONV_PATH=${iconv}
     export ARKOUDA_IDN2_PATH=${libidn2}
     export ARKOUDA_SKIP_CHECK_DEPS=yes
@@ -32,23 +31,12 @@ stdenv.mkDerivation rec {
     echo "IDN2_PATH=${libidn2}" >> Makefile.paths
     cat Makefile.paths
 
-    echo CHECKWHERESTUFFIS
-    ls
-    #export NIX_LDFLAGS+=" -L${iconv}"
-    echo $NIX_LDFLAGS
-    #export CHPL_FLAGS="-I${libiconv}/include"
-
     substituteInPlace Makefile \
       --replace "Checking for ZMQ" "Checking for ZMQ: \$(CHPL_FLAGS)"
+    # looks like a bug with upstream
+    substituteInPlace tests/server/TestBase.chpl \
+      --replace "SymArrayDmap" "SymArrayDmapCompat"
   '';
-
-#  cmakeFlags = [
-#    "-DARKOUDA_ZMQ_PATH=${zeromq}"
-#    "-DARKOUDA_HDF5_PATH=${hdf5.dev}"
-#    "-DARKOUDA_ARROW_PATH=${arrow-cpp}"
-#    "-DARKOUDA_ICONV_PATH=${libiconv}"
-#    "-DARKOUDA_IDN2_PATH=${libidn2}"
-#  ];
 
   nativeBuildInputs = [ pkg-config ];
 
@@ -57,6 +45,13 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [ gmp ];
 
   enableParallelBuilding = true;
+
+  doCheck = true;
+
+  checkPhase = ''
+    make test-bin
+  '';
+
   installPhase = ''
     mkdir $out
     mkdir $out/bin
