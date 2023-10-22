@@ -23,6 +23,7 @@
 # tests
 , pytest
 , pytest-env
+, arkouda_server
  }:
 
 buildPythonPackage rec {
@@ -61,9 +62,15 @@ buildPythonPackage rec {
   nativeCheckInputs = [
     pytest
     pytest-env
+    arkouda_server
   ];
 
   doCheck = true;
+
+  checkPhase = ''
+    export ARKOUDA_HOME=${arkouda_server}/bin
+    make test
+  '';
 
   pythonImportsCheck = [ "arkouda" ];
 

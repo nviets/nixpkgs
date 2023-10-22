@@ -3,7 +3,7 @@
 , curl, libiconvReal}:
 
 stdenv.mkDerivation rec {
-  pname = "arkouda";
+  pname = "arkouda_server";
   version = "2023.10.06";
 
   src = fetchFromGitHub {
@@ -56,6 +56,8 @@ stdenv.mkDerivation rec {
     mkdir $out
     mkdir $out/bin
     cp arkouda_server $out/bin
+    cp arkouda_server $out
+    cp -r server_util $out
   '';
 
   meta = with lib; {
