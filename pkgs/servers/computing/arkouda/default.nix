@@ -56,6 +56,12 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [ gmp ];
 
+  enableParallelBuilding = true;
+  installPhase = ''
+    mkdir $out
+    cp -r * $out
+  '';
+
   meta = with lib; {
     changelog = "https://github.com/Bears-R-Us/arkouda/releases/tag/v${version}";
     description = "Interactive Data Analytics at Supercomputing Scale";
