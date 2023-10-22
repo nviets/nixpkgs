@@ -1,11 +1,13 @@
 { bash
 , cmake
 , coreutils
+, curl
 , fetchFromGitHub
 , file
 , gmp
 , gnumake
 , gnum4
+, iconv
 , lib
 , libunwind
 , llvmPackages
@@ -183,6 +185,9 @@ llvmPackages.stdenv.mkDerivation rec {
       --add-flags "-I ${llvmPackages.bintools.libc.dev}/include" \
   '' + '' \
       --add-flags "-I ${llvmPackages.clang-unwrapped.lib}/lib/clang/${llvmPackages.clang.version}/include" \
+      --add-flags "-I ${gmp.dev}/include" \
+      --add-flags "-I ${curl.dev}/include" \
+      --add-flags "-I ${iconv}/include" \
       --add-flags "-L ${gmp}/lib" \
       --add-flags "-L ${xz.out}/lib"
 
@@ -235,6 +240,8 @@ llvmPackages.stdenv.mkDerivation rec {
     python3
     which
   ];
+
+  propagatedBuildInputs = [ gmp ];
 
   meta = {
     description = "a Productive Parallel Programming Language";
