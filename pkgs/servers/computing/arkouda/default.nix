@@ -59,7 +59,8 @@ stdenv.mkDerivation rec {
   enableParallelBuilding = true;
   installPhase = ''
     mkdir $out
-    cp -r * $out
+    mkdir $out/bin
+    cp arkouda_server $out/bin
   '';
 
   meta = with lib; {
