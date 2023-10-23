@@ -1,6 +1,6 @@
 { lib, stdenv, fetchFromGitHub, writeText, cmake, ninja, cudaPackages
-, boost, glew, imgui, glfw3, gtest
-, zlib, openssl, cli11}:
+, boost, glew, imgui, glfw3, gtest, libGL, autoPatchelfHook, addOpenGLRunpath
+, cereal, zlib, openssl, cli11}:
 
 stdenv.mkDerivation rec {
   pname = "alien";
@@ -62,28 +62,41 @@ stdenv.mkDerivation rec {
       #ln -s $glad}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
       ln -s ${gtest}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
       ln -s ${zlib}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
-      ln -s ${openssl}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
-      ln -s ${cli11}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
+      #ln -s ${openssl}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
+      #ln -s ${cli11}/lib/lib* $VCPKG_ROOT/installed/${vcpkg_target}/lib/
       echo SUCCESS
     '';
 
   preConfigure = ''
     echo CONFIGUREPHASE
     #export CUDA_PATH="${cudaPackages.cudatoolkit}"
-    #substituteInPlace CMakeLists.txt \
-    #  "set(CMAKE_TOOLCHAIN_FILE" "#set(CMAKE_TOOLCHAIN_FILE"
+    export imgui_DIR=${imgui}
+    substituteInPlace CMakeLists.txt \
+      --replace "find_package(OpenGL REQUIRED)" "#find_package(OpenGL REQUIRED)" \
+      --replace "find_package(imgui REQUIRED)" "#find_package(imgui REQUIRED)"
+    cat external/vcpkg/scripts/buildsystems/vcpkg.cmake
   '';
 
-  nativeBuildInputs = [ cmake ninja ];
+  nativeBuildInputs = [ cmake ninja addOpenGLRunpath autoPatchelfHook ];
 
-  buildInputs = [ cudaPackages.cudatoolkit ];
+  buildInputs = [
+    cudaPackages.cudatoolkit
+    #cudaPackages.autoAddOpenGLRunpathHook
+    addOpenGLRunpath
+    autoPatchelfHook
+    glew
+    cereal
+    imgui
+  ];
 
   cmakeFlags = [
     "-DCMAKE_BUILD_TYPE=Release"
     "-DCMAKE_MAKE_PROGRAM=ninja"
-    "-DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "-DBoost_INCLUDE_DIR=${lib.getDev boost}/include"
+    #"-DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake"
     "-DVCPKG_MANIFEST_INSTALL=OFF"
     "-DCMAKE_CUDA_COMPILER=${cudaPackages.cudatoolkit}/bin/nvcc"
+    "-DCMAKE_PREFIX_PATH=${imgui}"
   ];
 
   meta = with lib; {
