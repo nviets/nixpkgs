@@ -37283,6 +37283,8 @@ with pkgs;
 
   ace-of-penguins = callPackage ../games/ace-of-penguins { };
 
+  alien = callPackage ../games/alien { };
+
   among-sus = callPackage ../games/among-sus { };
 
   antsimulator = callPackage ../games/antsimulator { };
