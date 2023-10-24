@@ -57,7 +57,7 @@ escapeName <- function(name) {
     switch(name, "import" = "r_import", "assert" = "r_assert", name)
 }
 
-formatPackage <- function(name, version, sha256, depends, imports, linkingTo) {
+formatPackage <- function(name, version, sha256, license, depends, imports, linkingTo) {
     attr <- gsub(".", "_", escapeName(name), fixed=TRUE)
     options(warn=5)
     depends <- paste( if (is.na(depends)) "" else gsub("[ \t\n]+", "", depends)
@@ -72,7 +72,7 @@ formatPackage <- function(name, version, sha256, depends, imports, linkingTo) {
     depends <- lapply(depends, escapeName)
     depends <- paste(depends)
     depends <- paste(sort(unique(depends)), collapse=" ")
-    paste0("  ", attr, " = derive2 { name=\"", name, "\"; version=\"", version, "\"; sha256=\"", sha256, "\"; depends=[", depends, "]; };")
+    paste0("  ", attr, " = derive2 { name=\"", name, "\"; version=\"", version, "\"; sha256=\"", sha256, "\"; license=lib.licenses.", license, " depends=[", depends, "]; };")
 }
 
 clusterExport(cl, c("nixPrefetch","readFormatted", "mirrorUrl", "mirrorType", "knownPackages"))
