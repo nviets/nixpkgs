@@ -77,16 +77,16 @@ formatPackage <- function(name, version, sha256, license, depends, imports, link
 
 clusterExport(cl, c("nixPrefetch","readFormatted", "mirrorUrl", "mirrorType", "knownPackages"))
 
-pkgs <- pkgs[order(Package)]
+pkgsTmp <- pkgs[order(Package)]
 
-licenseLookup <- data.frame(
-  License
-  )
+# map CRAN/BIOC licenses into lib.license
+licenseLookup <- read.csv("licenses.csv")
+pkgs <- merge(x = pkgsTmp, y = licenseLookup, by = "License")
 
 write(paste("updating", mirrorType, "packages"), stderr())
 pkgs$sha256 <- parApply(cl, pkgs, 1, function(p) nixPrefetch(p[1], p[2]))
 
-nix <- apply(pkgs, 1, function(p) formatPackage(p[1], p[2], p[9], p[18], p[4], p[5], p[6]))
+nix <- apply(pkgs, 1, function(p) formatPackage(p[1], p[2], p[19], p[18], p[4], p[5], p[6]))
 write("done", stderr())
 
 # Mark deleted packages as broken

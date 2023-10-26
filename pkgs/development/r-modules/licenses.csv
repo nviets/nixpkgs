@@ -1,4 +1,4 @@
-n,License,lib.licenses,notes
+n,License,nixpkgs,notes
 4975,GPL-3,gpl3,
 4417,GPL (>= 2),gpl2Plus,
 4325,MIT + file LICENSE,mit,
