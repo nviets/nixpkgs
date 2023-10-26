@@ -86,7 +86,7 @@ pkgs <- merge(x = pkgsTmp, y = licenseLookup, by = "License")
 write(paste("updating", mirrorType, "packages"), stderr())
 pkgs$sha256 <- parApply(cl, pkgs, 1, function(p) nixPrefetch(p[1], p[2]))
 
-nix <- apply(pkgs, 1, function(p) formatPackage(p[1], p[2], p[19], p[18], p[4], p[5], p[6]))
+nix <- apply(pkgs, 1, function(p) formatPackage(p[1], p[2], p[17], p[19], p[4], p[5], p[6]))
 write("done", stderr())
 
 # Mark deleted packages as broken
