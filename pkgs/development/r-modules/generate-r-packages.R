@@ -84,7 +84,11 @@ licenseLookup <- read.csv("licenses.csv")
 pkgs <- merge(x = pkgsTmp, y = licenseLookup, by = "License")
 
 write(paste("updating", mirrorType, "packages"), stderr())
-pkgs$sha256 <- parApply(cl, pkgs, 1, function(p) nixPrefetch(p[1], p[2]))
+write(paste("updating", pkgs[1,2], "and", pkgs[1,3]), stderr())
+write(paste("updating...", nixPrefetch(pkgs[1,2], pkgs[1,3])))
+Sys.sleep(5)
+blah
+pkgs$sha256 <- parApply(cl, pkgs, 1, function(p) nixPrefetch(p[2], p[3]))
 
 nix <- apply(pkgs, 1, function(p) formatPackage(p[1], p[2], p[17], p[19], p[4], p[5], p[6]))
 write("done", stderr())
