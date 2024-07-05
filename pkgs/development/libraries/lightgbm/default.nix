@@ -145,7 +145,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description =
-      "LightGBM is a gradient boosting framework that uses tree based learning algorithms.";
+      "Gradient boosting framework that uses tree based learning algorithms.";
     mainProgram = "lightgbm";
     homepage = "https://github.com/microsoft/LightGBM";
     license = licenses.mit;
