@@ -150,6 +150,7 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/microsoft/LightGBM";
     license = licenses.mit;
     platforms = platforms.unix;
+    broken = stdenv.isDarwin;
     maintainers = with maintainers; [ nviets ];
   };
 }
