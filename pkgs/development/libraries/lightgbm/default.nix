@@ -1,6 +1,6 @@
 { config, stdenv, lib, fetchFromGitHub, cmake, gtest, doCheck ? true
 , cudaSupport ? config.cudaSupport or false, openclSupport ? false
-, mpiSupport ? false, javaWrapper ? false, hdfsSupport ? false, pythonLibrary ? false
+, mpiSupport ? false, javaWrapper ? false, pythonLibrary ? false
 , rLibrary ? false, cudaPackages, opencl-headers, ocl-icd, boost
 , llvmPackages, openmpi, openjdk, swig, hadoop, R, rPackages, pandoc }:
 
@@ -37,9 +37,7 @@ stdenv.mkDerivation rec {
     ++ lib.optionals stdenv.isDarwin [ llvmPackages.openmp ]
     ++ lib.optionals openclSupport [ opencl-headers ocl-icd boost ]
     ++ lib.optionals mpiSupport [ openmpi ]
-    ++ lib.optionals hdfsSupport [ hadoop ]
-    ++ lib.optionals (hdfsSupport || javaWrapper) [ openjdk ]
-    ++ lib.optionals javaWrapper [ swig ]
+    ++ lib.optionals javaWrapper [ openjdk swig ]
     ++ lib.optionals rLibrary [ R pandoc ];
 
   buildInputs = [ gtest ]
@@ -80,10 +78,6 @@ stdenv.mkDerivation rec {
     ++ lib.optionals cudaSupport [ "-DUSE_CUDA=1" "-DCMAKE_CXX_COMPILER=${cudaPackages.backendStdenv.cc}/bin/cc" ]
     ++ lib.optionals openclSupport [ "-DUSE_GPU=ON" ]
     ++ lib.optionals mpiSupport [ "-DUSE_MPI=ON" ]
-    ++ lib.optionals hdfsSupport [
-      "-DUSE_HDFS=ON"
-      "-DHDFS_LIB=${hadoop}/lib/hadoop-${hadoop.version}/lib/native/libhdfs.so"
-      "-DHDFS_INCLUDE_DIR=${hadoop}/lib/hadoop-${hadoop.version}/include" ]
     ++ lib.optionals javaWrapper [
       "-DUSE_SWIG=ON"
       # RPATH of binary /nix/store/.../bin/... contains a forbidden reference to /build/
