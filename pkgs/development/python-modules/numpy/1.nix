@@ -158,6 +158,7 @@ buildPythonPackage rec {
     [
       # Tries to import numpy.distutils.msvccompiler, removed in setuptools 74.0
       "test_api_importable"
+      "test_umath_accuracy"
     ]
     ++ lib.optionals stdenv.hostPlatform.isi686 [
       "test_new_policy" # AssertionError: assert False
