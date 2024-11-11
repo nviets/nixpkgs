@@ -147,6 +147,7 @@ buildPythonPackage {
     "test_load_mat4_le"
     "hyp2f1_test_case47"
     "hyp2f1_test_case3"
+    "hyp2f1_test_case42"
     "test_uint64_max"
   ];
 
