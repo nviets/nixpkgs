@@ -4,14 +4,14 @@
 , cmake
 , darwin # Accelerate
 , llvmPackages # openmp
-, withMkl ? false, mkl
-, withCUDA ? false
-, withCuDNN ? false
+, withMkl ? true, mkl
+, withCUDA ? true
+, withCuDNN ? true
 , cudaPackages
 # Enabling both withOneDNN and withOpenblas is broken
 # https://github.com/OpenNMT/CTranslate2/issues/1294
-, withOneDNN ? false, oneDNN
-, withOpenblas ? true, openblas
+, withOneDNN ? true, oneDNN
+, withOpenblas ? false, openblas
 , withRuy ? true
 
 # passthru tests
