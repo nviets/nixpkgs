@@ -39,7 +39,7 @@ in
 
 buildPythonPackage rec {
   pname = "scalene";
-  version = "1.5.46";
+  version = "1.5.49";
   pyproject = true;
   disabled = pythonOlder "3.9";
 
@@ -47,7 +47,7 @@ buildPythonPackage rec {
     owner = "plasma-umass";
     repo = "scalene";
     rev = "v${version}";
-    hash = "sha256-G+fX0D70aGOmXr/SqaBKkOz3CEHpGqClFFdTeOzRpaw=";
+    hash = "sha256-Ivce90+W9NBMQjebj3zCB5eqDJydT8OTPYy4fjbybgI=";
   };
 
   patches = [

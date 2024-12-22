@@ -1,6 +1,7 @@
-{ lib
-, fetchFromGitHub
-, python3
+{
+  lib,
+  fetchFromGitHub,
+  python3,
 }:
 
 python3.pkgs.buildPythonApplication rec {
@@ -39,8 +40,6 @@ python3.pkgs.buildPythonApplication rec {
   ];
 
   pytestFlagsArray = [
-    "-n"
-    "$NIX_BUILD_CORES"
     # Run the same tests as upstream does in the first round
     "tests/core/"
     "tests/test_exploit_scenarios.py"

@@ -1,6 +1,6 @@
 {
   lib,
-  stdenv,
+  gcc14Stdenv,
   fetchFromGitHub,
   cmake,
   makeWrapper,
@@ -18,22 +18,22 @@
   qtbase,
   qttools,
   qtwayland,
-  sdbus-cpp,
+  sdbus-cpp_2,
   slurp,
   systemd,
   wayland,
   wayland-protocols,
   wayland-scanner,
 }:
-stdenv.mkDerivation (finalAttrs: {
+gcc14Stdenv.mkDerivation (finalAttrs: {
   pname = "xdg-desktop-portal-hyprland";
-  version = "1.3.6";
+  version = "1.3.9";
 
   src = fetchFromGitHub {
     owner = "hyprwm";
     repo = "xdg-desktop-portal-hyprland";
     rev = "refs/tags/v${finalAttrs.version}";
-    hash = "sha256-1DGktDtSWIJpnDbVoj/qpvJSH5zg6JbOfuh6xqZMap0=";
+    hash = "sha256-sAObJHBZjJHzYR62g+BLNBNq19cqb5LTw73H8m57K0w=";
   };
 
   depsBuildBuild = [
@@ -58,7 +58,7 @@ stdenv.mkDerivation (finalAttrs: {
     qtbase
     qttools
     qtwayland
-    sdbus-cpp
+    sdbus-cpp_2
     systemd
     wayland
     wayland-protocols

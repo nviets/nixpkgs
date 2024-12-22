@@ -5,11 +5,11 @@
 
 stdenv.mkDerivation rec {
   pname = "alfaview";
-  version = "9.17.0";
+  version = "9.19.0";
 
   src = fetchurl {
     url = "https://assets.alfaview.com/stable/linux/deb/${pname}_${version}.deb";
-    hash = "sha256-Rq/5QByaqGd5Cfr4r+Ojv8OC8PvFQ4a+TT8CgeevF28=";
+    hash = "sha256-o0sB+JLwemUNRflp8cR0exc5QvCkpxIAVd/g4vwix6Q=";
   };
 
   nativeBuildInputs = [
@@ -49,10 +49,6 @@ stdenv.mkDerivation rec {
 
   dontBuild = true;
   dontConfigure = true;
-
-  unpackPhase = ''
-    dpkg-deb -x ${src} ./
-  '';
 
   installPhase = ''
     runHook preInstall

@@ -25,6 +25,8 @@
   libvdpau,
   twolame,
   gmp,
+  libdrm,
+  libpulseaudio,
 }:
 let
   fullPath = lib.makeLibraryPath [
@@ -49,26 +51,28 @@ let
     libvdpau
     twolame
     gmp
+    libdrm
+    libpulseaudio
   ];
 
   lightworks = stdenv.mkDerivation rec {
-    version = "2023.2";
-    rev = "146752";
+    version = "2025.1";
+    rev = "148287";
     pname = "lightworks";
 
     src =
       if stdenv.hostPlatform.system == "x86_64-linux" then
         fetchurl {
           url = "https://cdn.lwks.com/releases/${version}/lightworks_${version}_r${rev}.deb";
-          sha256 = "sha256-Xjcqdhe85YdPX8AHpKmo/K77AURg0JvtqIvilQOV2ek=";
+          sha256 = "sha256-opYbWzZYim5wqSaxDeGmc10XxFkkE521PDB8OULh7Jc=";
         }
       else
         throw "${pname}-${version} is not supported on ${stdenv.hostPlatform.system}";
 
-    nativeBuildInputs = [ makeWrapper ];
-    buildInputs = [ dpkg ];
-
-    unpackPhase = "dpkg-deb -x ${src} ./";
+    nativeBuildInputs = [
+      dpkg
+      makeWrapper
+    ];
 
     installPhase = ''
       mkdir -p $out/bin
@@ -93,7 +97,7 @@ let
         $out/lib/lightworks/ntcardvt
 
       wrapProgram $out/lib/lightworks/ntcardvt \
-        --prefix LD_LIBRARY_PATH : ${fullPath}:$out/lib/lightworks \
+        --prefix LD_LIBRARY_PATH : $out/lib/lightworks:${fullPath} \
         --set FONTCONFIG_FILE $out/lib/lightworks/fonts.conf
 
       cp -r usr/share $out/share

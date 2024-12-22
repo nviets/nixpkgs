@@ -1,10 +1,11 @@
-{ stdenv
-, lib
-, fetchFromGitLab
-, gobject-introspection
-, intltool
-, python3
-, wrapGAppsHook3
+{
+  stdenv,
+  lib,
+  fetchFromGitLab,
+  gobject-introspection,
+  intltool,
+  python3,
+  wrapGAppsHook3,
 }:
 
 python3.pkgs.buildPythonApplication rec {
@@ -42,7 +43,6 @@ python3.pkgs.buildPythonApplication rec {
     description = "GTK application to display Tor circuits and streams";
     mainProgram = "onioncircuits";
     license = licenses.gpl3;
-    maintainers = with maintainers; [ milran ];
+    maintainers = with maintainers; [ wattmto ];
   };
 }
-

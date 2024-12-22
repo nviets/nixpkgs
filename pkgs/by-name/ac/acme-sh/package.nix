@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "acme.sh";
-  version = "3.0.9";
+  version = "3.1.0";
 
   src = fetchFromGitHub {
     owner = "acmesh-official";
     repo = "acme.sh";
     rev = "refs/tags/${version}";
-    hash = "sha256-GJNaY5Dxis/x5bCvOPnIvJ4VrJkjjaaOFq68JYXxDf0=";
+    hash = "sha256-BPZ+5xvKqEaz+tkccVL0hEDAxLkICW5O+qPf73bOqRU=";
   };
 
   nativeBuildInputs = [
@@ -72,7 +72,7 @@ stdenv.mkDerivation rec {
       - Cron job notifications for renewal or error etc.
     '';
     license = licenses.gpl3Only;
-    maintainers = with lib.maintainers; [ mkaito ] ++ teams.serokell.members;
+    maintainers = lib.teams.serokell.members;
     inherit (coreutils.meta) platforms;
     mainProgram = "acme.sh";
   };

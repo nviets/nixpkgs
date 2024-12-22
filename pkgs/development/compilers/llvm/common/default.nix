@@ -380,6 +380,17 @@ let
       libllvm = callPackage ./llvm {
         patches =
           lib.optional (lib.versionOlder metadata.release_version "14") ./llvm/llvm-config-link-static.patch
+          ++ lib.optionals (lib.versions.major metadata.release_version == "12") [
+            (metadata.getVersionFile "llvm/fix-llvm-issue-49955.patch")
+
+            # On older CPUs (e.g. Hydra/wendy) we'd be getting an error in this test.
+            (fetchpatch {
+              name = "uops-CMOV16rm-noreg.diff";
+              url = "https://github.com/llvm/llvm-project/commit/9e9f991ac033.diff";
+              sha256 = "sha256:12s8vr6ibri8b48h2z38f3afhwam10arfiqfy4yg37bmc054p5hi";
+              stripLen = 1;
+            })
+          ]
           ++ [ (metadata.getVersionFile "llvm/gnu-install-dirs.patch") ]
           ++ lib.optionals (lib.versionAtLeast metadata.release_version "15") [
             # Running the tests involves invoking binaries (like `opt`) that depend on
@@ -443,7 +454,7 @@ let
                   hash = "sha256-XPbvNJ45SzjMGlNUgt/IgEvM2dHQpDOe6woUJY+nUYA=";
                 }
               )
-          ++ lib.optionals (lib.versions.major metadata.release_version == "13") [
+          ++ lib.optionals (lib.versionOlder metadata.release_version "14") [
             # Backport gcc-13 fixes with missing includes.
             (fetchpatch {
               name = "signals-gcc-13.patch";
@@ -529,8 +540,24 @@ let
             # mis-compilation in firefox.
             # See: https://bugzilla.mozilla.org/show_bug.cgi?id=1741454
             (metadata.getVersionFile "clang/revert-malloc-alignment-assumption.patch")
+          # This patch prevents global system header directories from
+          # leaking through on non‐NixOS Linux. However, on macOS, the
+          # SDK path is used as the sysroot, and forcing `-nostdlibinc`
+          # breaks `-isysroot` with an unwrapped compiler. As macOS has
+          # no `/usr/include`, there’s essentially no risk to skipping
+          # the patch there. It’s possible that Homebrew headers in
+          # `/usr/local/include` might leak through to unwrapped
+          # compilers being used without an SDK set or something, but
+          # it hopefully shouldn’t matter.
+          #
+          # TODO: Figure out a better solution to this whole problem so
+          # that we won’t have to choose between breaking unwrapped
+          # compilers breaking libclang when we can do Linux‐to‐Darwin
+          # cross‐compilation again.
+          ++ lib.optional (
+            !args.stdenv.hostPlatform.isDarwin || !args.stdenv.targetPlatform.isDarwin
+          ) ./clang/add-nostdlibinc-flag.patch
           ++ [
-            ./clang/add-nostdlibinc-flag.patch
             (substituteAll {
               src =
                 if (lib.versionOlder metadata.release_version "16") then
@@ -697,8 +724,12 @@ let
             #
             # See here for some context:
             # https://github.com/NixOS/nixpkgs/pull/194634#issuecomment-1272129132
+            #
+            # Patch is applied for >= 14 as the versions below are broken anyways.
             ++ lib.optional (
-              stdenv.targetPlatform.isDarwin && lib.versionOlder stdenv.targetPlatform.darwinSdkVersion "11.0"
+              lib.versionAtLeast metadata.release_version "14"
+              && stdenv.targetPlatform.isDarwin
+              && lib.versionOlder stdenv.targetPlatform.darwinSdkVersion "11.0"
             ) (metadata.getVersionFile "lldb/cpu_subtype_arm64e_replacement.patch");
         }
         // lib.optionalAttrs (lib.versions.major metadata.release_version == "16") {
@@ -947,6 +978,10 @@ let
             url = "https://github.com/llvm/llvm-project/commit/abc2eae68290c453e1899a94eccc4ed5ea3b69c1.patch";
             hash = "sha256-oxCxOjhi5BhNBEraWalEwa1rS3Mx9CuQgRVZ2hrbd7M=";
           })
+          (fetchpatch {
+            url = "https://github.com/llvm/llvm-project/commit/5909979869edca359bcbca74042c2939d900680e.patch";
+            hash = "sha256-l4rQHYbblEADBXaZIdqTG0sZzH4fEQvYiqhLYNZDMa8=";
+          })
         ];
       };
     }
@@ -971,8 +1006,18 @@ let
         ++ [
           (metadata.getVersionFile "compiler-rt/X86-support-extension.patch") # Add support for i486 i586 i686 by reusing i386 config
         ]
+        ++ lib.optional (lib.versions.major metadata.release_version == "12") (fetchpatch {
+          # fixes the parallel build on aarch64 darwin
+          name = "fix-symlink-race-aarch64-darwin.patch";
+          url = "https://github.com/llvm/llvm-project/commit/b31080c596246bc26d2493cfd5e07f053cf9541c.patch";
+          relative = "compiler-rt";
+          hash = "sha256-Cv2NC8402yU7QaTR6TzdH+qyWRy+tTote7KKWtKRWFQ=";
+        })
         ++ lib.optional (
-          lib.versionAtLeast metadata.release_version "14" && lib.versionOlder metadata.release_version "18"
+          lib.versions.major metadata.release_version == "12"
+          || (
+            lib.versionAtLeast metadata.release_version "14" && lib.versionOlder metadata.release_version "18"
+          )
         ) (metadata.getVersionFile "compiler-rt/gnu-install-dirs.patch")
         ++ [
           # ld-wrapper dislikes `-rpath-link //nix/store`, so we normalize away the
@@ -980,9 +1025,11 @@ let
           (metadata.getVersionFile "compiler-rt/normalize-var.patch")
         ]
         ++
-          lib.optional (lib.versionOlder metadata.release_version "18")
+          lib.optional
+            (lib.versionAtLeast metadata.release_version "13" && lib.versionOlder metadata.release_version "18")
             # Prevent a compilation error on darwin
             (metadata.getVersionFile "compiler-rt/darwin-targetconditionals.patch")
+        # TODO: make unconditional and remove in <15 section below. Causes rebuilds.
         ++ lib.optionals (lib.versionAtLeast metadata.release_version "15") [
           # See: https://github.com/NixOS/nixpkgs/pull/186575
           ./compiler-rt/darwin-plistbuddy-workaround.patch
@@ -998,13 +1045,18 @@ let
           ./compiler-rt/armv6-mcr-dmb.patch
           ./compiler-rt/armv6-sync-ops-no-thumb.patch
         ]
-        ++ lib.optionals (lib.versionOlder metadata.release_version "18") [
-          # Fix build on armv6l
-          ./compiler-rt/armv6-scudo-no-yield.patch
-        ]
+        ++
+          lib.optionals
+            (lib.versionAtLeast metadata.release_version "13" && lib.versionOlder metadata.release_version "18")
+            [
+              # Fix build on armv6l
+              ./compiler-rt/armv6-scudo-no-yield.patch
+            ]
         ++ [
           # Fix build on armv6l
           ./compiler-rt/armv6-no-ldrexd-strexd.patch
+        ]
+        ++ lib.optionals (lib.versionAtLeast metadata.release_version "13") [
           (metadata.getVersionFile "compiler-rt/armv6-scudo-libatomic.patch")
         ]
         ++ lib.optional (lib.versionAtLeast metadata.release_version "19") (fetchpatch {

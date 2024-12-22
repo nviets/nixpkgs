@@ -1,34 +1,38 @@
-{ lib
-, stdenv
-, autoreconfHook
-, fetchFromGitHub
-, xorgproto
-, libX11
-, libXext
-, libXi
-, libXinerama
-, libXrandr
-, libXrender
-, ncurses
-, pixman
-, pkg-config
-, udev
-, utilmacros
-, xorgserver
+{
+  lib,
+  stdenv,
+  autoreconfHook,
+  fetchFromGitHub,
+  xorgproto,
+  libX11,
+  libXext,
+  libXi,
+  libXinerama,
+  libXrandr,
+  libXrender,
+  ncurses,
+  pixman,
+  pkg-config,
+  udev,
+  utilmacros,
+  xorgserver,
 }:
 
 stdenv.mkDerivation rec {
   pname = "xf86-input-wacom";
-  version = "1.2.2";
+  version = "1.2.3";
 
   src = fetchFromGitHub {
     owner = "linuxwacom";
     repo = pname;
     rev = "${pname}-${version}";
-    sha256 = "sha256-3w12OjjMdu03BhUVEjkyj1ngDFnp0Cp66L0nn3LuU8Q=";
+    sha256 = "sha256-0eDik4fhsg1HAL6lCZMll/0VAghpzMSHY0RoKxSOIbc=";
   };
 
-  nativeBuildInputs = [ autoreconfHook pkg-config ];
+  nativeBuildInputs = [
+    autoreconfHook
+    pkg-config
+  ];
 
   buildInputs = [
     libX11

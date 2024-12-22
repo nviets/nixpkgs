@@ -3,19 +3,18 @@
   autogen,
   automake,
   clangStdenv,
-  fetchFromGitHub,
+  fetchfossil,
   lib,
 }:
 
 clangStdenv.mkDerivation (finalAttrs: {
   pname = "objfw";
-  version = "1.2";
+  version = "1.2.3";
 
-  src = fetchFromGitHub {
-    owner = "ObjFW";
-    repo = "ObjFW";
-    rev = "refs/tags/1.2-release";
-    hash = "sha256-nGajiLYwkIDyJujN2zWULkQXKV2A2wzjYl9IoZBU/N4=";
+  src = fetchfossil {
+    url = "https://objfw.nil.im/home";
+    rev = "${finalAttrs.version}-release";
+    hash = "sha256-qYZkuJ57/bhvKukXECHC38ooDQ8GE2vbuvY/bvH4ZVY=";
   };
 
   nativeBuildInputs = [
@@ -33,7 +32,7 @@ clangStdenv.mkDerivation (finalAttrs: {
 
   meta = {
     description = "A portable framework for the Objective-C language";
-    homepage = "https://github.com/ObjFW/ObjFW";
+    homepage = "https://objfw.nil.im";
     license = lib.licenses.lgpl3;
     maintainers = [ lib.maintainers.steeleduncan ];
     platforms = lib.platforms.linux;

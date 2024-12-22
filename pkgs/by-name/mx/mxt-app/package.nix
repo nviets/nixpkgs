@@ -1,14 +1,20 @@
-{ lib, stdenv, fetchFromGitHub, autoreconfHook, libtool }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  autoreconfHook,
+  libtool,
+}:
 
 stdenv.mkDerivation rec {
-  version="1.40";
+  version = "1.42";
   pname = "mxt-app";
 
   src = fetchFromGitHub {
     owner = "atmel-maxtouch";
     repo = "mxt-app";
     rev = "v${version}";
-    sha256 = "sha256-ZquD1aZu/TJQdr7QwKHTbCwSCFxt4drVBm4D1FLlzF0=";
+    sha256 = "sha256-mcFkXUC7Qtajg5IPy5PAqlyvY44HDM8JL+pkkBYC0JA=";
   };
 
   nativeBuildInputs = [ autoreconfHook ];

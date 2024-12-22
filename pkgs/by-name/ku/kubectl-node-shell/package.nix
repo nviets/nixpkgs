@@ -1,14 +1,19 @@
-{ stdenvNoCC, lib, fetchFromGitHub, bash }:
+{
+  stdenvNoCC,
+  lib,
+  fetchFromGitHub,
+  bash,
+}:
 
 stdenvNoCC.mkDerivation rec {
   pname = "kubectl-node-shell";
-  version = "1.10.1";
+  version = "1.11.0";
 
   src = fetchFromGitHub {
     owner = "kvaps";
     repo = "kubectl-node-shell";
     rev = "v${version}";
-    hash = "sha256-QG1YQH2qd4TBkH42z9htni4llL13sEoBXlih4yc8r4w=";
+    hash = "sha256-jLwnWp/XS4SOyf5v46DPy2Nc6LatF6AzNvHiGVNpsto=";
   };
 
   strictDeps = true;

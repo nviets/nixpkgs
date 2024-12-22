@@ -6,7 +6,6 @@
   cmake,
   gettext,
   msgpack-c,
-  darwin,
   libuv,
   lua,
   pkg-config,
@@ -19,6 +18,8 @@
   fixDarwinDylibNames,
   glibcLocales ? null,
   procps ? null,
+  versionCheckHook,
+  nix-update-script,
 
   # now defaults to false because some tests can be flaky (clipboard etc), see
   # also: https://github.com/neovim/neovim/issues/16233
@@ -96,15 +97,15 @@ stdenv.mkDerivation (
   in
   {
     pname = "neovim-unwrapped";
-    version = "0.10.2";
+    version = "0.10.3";
 
     __structuredAttrs = true;
 
     src = fetchFromGitHub {
       owner = "neovim";
       repo = "neovim";
-      rev = "refs/tags/v${finalAttrs.version}";
-      hash = "sha256-+qjjelYMB3MyjaESfCaGoeBURUzSVh/50uxUqStxIfY=";
+      tag = "v${finalAttrs.version}";
+      hash = "sha256-nmnEyHE/HcrwK+CyJHNoLG0BqjnWleiBy0UYcJL7Ecc=";
     };
 
     patches = [
@@ -145,7 +146,6 @@ stdenv.mkDerivation (
         tree-sitter
         unibilium
       ]
-      ++ lib.optionals stdenv.hostPlatform.isDarwin [ darwin.libutil ]
       ++ lib.optionals finalAttrs.finalPackage.doCheck [
         glibcLocales
         procps
@@ -185,16 +185,12 @@ stdenv.mkDerivation (
       ];
 
     # nvim --version output retains compilation flags and references to build tools
-    postPatch =
-      ''
-        substituteInPlace src/nvim/version.c --replace NVIM_VERSION_CFLAGS "";
-      ''
-      + lib.optionalString (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
-        sed -i runtime/CMakeLists.txt \
-          -e "s|\".*/bin/nvim|\${stdenv.hostPlatform.emulator buildPackages} &|g"
-        sed -i src/nvim/po/CMakeLists.txt \
-          -e "s|\$<TARGET_FILE:nvim|\${stdenv.hostPlatform.emulator buildPackages} &|g"
-      '';
+    postPatch = lib.optionalString (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
+      sed -i runtime/CMakeLists.txt \
+        -e "s|\".*/bin/nvim|\${stdenv.hostPlatform.emulator buildPackages} &|g"
+      sed -i src/nvim/po/CMakeLists.txt \
+        -e "s|\$<TARGET_FILE:nvim|\${stdenv.hostPlatform.emulator buildPackages} &|g"
+    '';
     postInstall = ''
       find "$out" -type f -exec remove-references-to -t ${stdenv.cc} '{}' +
     '';
@@ -228,10 +224,7 @@ stdenv.mkDerivation (
       ];
 
     preConfigure =
-      lib.optionalString stdenv.hostPlatform.isDarwin ''
-        substituteInPlace src/nvim/CMakeLists.txt --replace "    util" ""
       ''
-      + ''
         mkdir -p $out/lib/nvim/parser
       ''
       + lib.concatStrings (
@@ -255,6 +248,17 @@ stdenv.mkDerivation (
 
     separateDebugInfo = true;
 
+    nativeInstallCheckInputs = [
+      versionCheckHook
+    ];
+    versionCheckProgram = "${placeholder "out"}/bin/nvim";
+    versionCheckProgramArg = [ "--version" ];
+    doInstallCheck = true;
+
+    passthru = {
+      updateScript = nix-update-script { };
+    };
+
     meta = {
       description = "Vim text editor fork focused on extensibility and agility";
       longDescription = ''
@@ -266,6 +270,7 @@ stdenv.mkDerivation (
         - Improve extensibility with a new plugin architecture
       '';
       homepage = "https://www.neovim.io";
+      changelog = "https://github.com/neovim/neovim/releases/tag/${finalAttrs.src.tag}";
       mainProgram = "nvim";
       # "Contributions committed before b17d96 by authors who did not sign the
       # Contributor License Agreement (CLA) remain under the Vim license.

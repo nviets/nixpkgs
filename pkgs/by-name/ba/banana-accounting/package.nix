@@ -1,15 +1,16 @@
-{ autoPatchelfHook
-, cairo
-, e2fsprogs
-, fetchurl
-, gmp
-, gtk3
-, libGL
-, libX11
-, lib
-, stdenv
-, libgcrypt
-, wrapGAppsHook3
+{
+  autoPatchelfHook,
+  cairo,
+  e2fsprogs,
+  fetchurl,
+  gmp,
+  gtk3,
+  libGL,
+  libX11,
+  lib,
+  stdenv,
+  libgcrypt,
+  wrapGAppsHook3,
 }:
 
 stdenv.mkDerivation {
@@ -56,5 +57,6 @@ stdenv.mkDerivation {
     license = licenses.unfree;
     platforms = [ "x86_64-linux" ];
     maintainers = with maintainers; [ jacg ];
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
 }

@@ -4,28 +4,30 @@
   fetchFromGitHub,
   git,
   installShellFiles,
-  kubescape,
-  testers,
+  versionCheckHook,
 }:
 
 buildGoModule rec {
   pname = "kubescape";
-  version = "3.0.18";
+  version = "3.0.22";
 
   src = fetchFromGitHub {
     owner = "kubescape";
     repo = "kubescape";
     rev = "refs/tags/v${version}";
-    hash = "sha256-4HBKvykeFFYg+/86ophmpIWELX8zkbvYEYgmISD3bbY=";
+    hash = "sha256-m1tfYuRDPxm8Q1e4RIzqfkv9vOjGUPvI0FADvYXep/c=";
     fetchSubmodules = true;
   };
 
   proxyVendor = true;
-  vendorHash = "sha256-QcCCY7BdDhZeLSOIYNnAet7uvcGlju4qb/j/GYwu2vE=";
+  vendorHash = "sha256-+DmElfOZcSnGaxEj4Ca1ysIb1M7N0kxtJx8+TXFOREY=";
 
   subPackages = [ "." ];
 
-  nativeBuildInputs = [ installShellFiles ];
+  nativeBuildInputs = [
+    installShellFiles
+    versionCheckHook
+  ];
 
   nativeCheckInputs = [ git ];
 
@@ -62,11 +64,9 @@ buildGoModule rec {
       --zsh <($out/bin/kubescape completion zsh)
   '';
 
-  passthru.tests.version = testers.testVersion {
-    package = kubescape;
-    command = "kubescape version";
-    version = "v${version}";
-  };
+  doInstallCheck = true;
+
+  versionCheckProgramArg = [ "version" ];
 
   meta = with lib; {
     description = "Tool for testing if Kubernetes is deployed securely";

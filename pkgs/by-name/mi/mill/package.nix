@@ -1,12 +1,18 @@
-{ lib, stdenv, fetchurl, jre, makeWrapper }:
+{
+  lib,
+  stdenv,
+  fetchurl,
+  jre,
+  makeWrapper,
+}:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "mill";
-  version = "0.12.0";
+  version = "0.12.4";
 
   src = fetchurl {
     url = "https://github.com/com-lihaoyi/mill/releases/download/${finalAttrs.version}/${finalAttrs.version}-assembly";
-    hash = "sha256-y4KtBZ1P6TmKaIL2K+MVvn5zX8nOxLjaJkeXCb4SjM8=";
+    hash = "sha256-WlykyNyXUitR6FHbhZXOeJKtMCrvoJK1gruh+G/hkb8=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
@@ -47,7 +53,10 @@ stdenv.mkDerivation (finalAttrs: {
       SBT, but can also be extended to support any other language or platform via
       modules (written in Java or Scala) or through an external subprocesses.
     '';
-    maintainers = with maintainers; [ scalavision zenithal ];
+    maintainers = with maintainers; [
+      scalavision
+      zenithal
+    ];
     platforms = lib.platforms.all;
   };
 })

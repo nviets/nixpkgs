@@ -1,17 +1,27 @@
-{ lib, stdenv, fetchFromGitHub, autoreconfHook, pkg-config, gtk3 }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  autoreconfHook,
+  pkg-config,
+  gtk3,
+}:
 
 stdenv.mkDerivation rec {
   pname = "screen-message";
-  version = "0.28";
+  version = "0.29";
 
   src = fetchFromGitHub {
     owner = "nomeata";
     repo = "screen-message";
     rev = version;
-    hash = "sha256-KHJL1N72Hc1B1m0olxoZxBHIpq/d/T3m2VdS5XC9+tk=";
+    hash = "sha256-fwKle+aXZuiNo5ksrigj7BGLv2fUILN2GluHHZ6co6s=";
   };
 
-  nativeBuildInputs = [ autoreconfHook pkg-config ];
+  nativeBuildInputs = [
+    autoreconfHook
+    pkg-config
+  ];
   buildInputs = [ gtk3 ];
 
   # screen-message installs its binary in $(prefix)/games per default

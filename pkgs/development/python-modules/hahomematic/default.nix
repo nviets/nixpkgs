@@ -16,7 +16,7 @@
 
 buildPythonPackage rec {
   pname = "hahomematic";
-  version = "2024.10.17";
+  version = "2024.12.0";
   pyproject = true;
 
   disabled = pythonOlder "3.12";
@@ -25,14 +25,14 @@ buildPythonPackage rec {
     owner = "danielperna84";
     repo = "hahomematic";
     rev = "refs/tags/${version}";
-    hash = "sha256-7VCmZcs2WtS9rlWby40dZGXcFY8E+3q+QH2URJkOLLQ=";
+    hash = "sha256-RLgJiapsRM8dMA4+T2S6DkSFjo+YBmVVpo1mOVKJ7EI=";
   };
 
   __darwinAllowLocalNetworking = true;
 
   postPatch = ''
     substituteInPlace pyproject.toml \
-      --replace-fail "setuptools==75.1.0" "setuptools" \
+      --replace-fail "setuptools==75.6.0" "setuptools" \
   '';
 
   build-system = [ setuptools ];

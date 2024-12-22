@@ -1,40 +1,41 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, desktop-file-utils
-, meson
-, ninja
-, pkg-config
-, vala
-, wrapGAppsHook4
-, evolution-data-server-gtk4
-, glib
-, glib-networking
-, gst_all_1
-, gtk4
-, gtksourceview5
-, gxml
-, json-glib
-, libadwaita
-, libgee
-, libical
-, libportal-gtk4
-, libsecret
-, libsoup_3
-, pantheon
-, sqlite
-, webkitgtk_6_0
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  desktop-file-utils,
+  meson,
+  ninja,
+  pkg-config,
+  vala,
+  wrapGAppsHook4,
+  evolution-data-server-gtk4,
+  glib,
+  glib-networking,
+  gst_all_1,
+  gtk4,
+  gtksourceview5,
+  gxml,
+  json-glib,
+  libadwaita,
+  libgee,
+  libical,
+  libportal-gtk4,
+  libsecret,
+  libsoup_3,
+  pantheon,
+  sqlite,
+  webkitgtk_6_0,
 }:
 
 stdenv.mkDerivation rec {
   pname = "planify";
-  version = "4.11.4";
+  version = "4.11.6";
 
   src = fetchFromGitHub {
     owner = "alainm23";
     repo = "planify";
     rev = version;
-    hash = "sha256-ADNMSXvfeAT53coAtCu3CVCU5XUFhLbvAH3WPFoKJVE=";
+    hash = "sha256-tHn3677bfJgAZnOfDjBJ87DUzr+e9I2lnCke/cN4olE=";
   };
 
   nativeBuildInputs = [

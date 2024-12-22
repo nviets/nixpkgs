@@ -1,23 +1,24 @@
-{ lib
-, rustPlatform
-, fetchFromGitHub
-, installShellFiles
-, stdenv
-, darwin
+{
+  lib,
+  rustPlatform,
+  fetchFromGitHub,
+  installShellFiles,
+  stdenv,
+  darwin,
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "dufs";
-  version = "0.42.0";
+  version = "0.43.0";
 
   src = fetchFromGitHub {
     owner = "sigoden";
     repo = "dufs";
     rev = "v${version}";
-    hash = "sha256-eada2xQlzB1kknwitwxZhFiv6myTbtYHHFkQtppa0tc=";
+    hash = "sha256-KkuP9UE9VT9aJ50QH1Y/2f+t0tLOMyNovxCaLq0Jz0s=";
   };
 
-  cargoHash = "sha256-juT3trREV7LmjBz+x7Od4XoTGuL1XRhknbU4Nopg2HU=";
+  cargoHash = "sha256-KyFE8TpbkSZQE3CL7jbvSE3JDWjnyqhiWXO7LZ4ZpgI=";
 
   nativeBuildInputs = [ installShellFiles ];
 
@@ -45,7 +46,13 @@ rustPlatform.buildRustPackage rec {
     mainProgram = "dufs";
     homepage = "https://github.com/sigoden/dufs";
     changelog = "https://github.com/sigoden/dufs/blob/${src.rev}/CHANGELOG.md";
-    license = with licenses; [ asl20 /* or */ mit ];
-    maintainers = with maintainers; [ figsoda holymonson ];
+    license = with licenses; [
+      asl20 # or
+      mit
+    ];
+    maintainers = with maintainers; [
+      figsoda
+      holymonson
+    ];
   };
 }

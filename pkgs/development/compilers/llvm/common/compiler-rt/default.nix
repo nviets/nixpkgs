@@ -56,7 +56,7 @@ let
       apple-sdk.override { enableBootstrap = true; };
 
   src' = if monorepoSrc != null then
-    runCommand "${baseName}-src-${version}" {} (''
+    runCommand "${baseName}-src-${version}" { inherit (monorepoSrc) passthru; } (''
       mkdir -p "$out"
     '' + lib.optionalString (lib.versionAtLeast release_version "14") ''
       cp -r ${monorepoSrc}/cmake "$out"
@@ -73,8 +73,7 @@ stdenv.mkDerivation ({
   inherit pname version patches;
 
   src = src';
-  sourceRoot = if lib.versionOlder release_version "13" then null
-    else "${src'.name}/${baseName}";
+  sourceRoot = "${src'.name}/${baseName}";
 
   nativeBuildInputs = [ cmake ]
     ++ (lib.optional (lib.versionAtLeast release_version "15") ninja)
@@ -167,7 +166,7 @@ stdenv.mkDerivation ({
   postPatch = lib.optionalString (!stdenv.hostPlatform.isDarwin) ''
     substituteInPlace cmake/builtin-config-ix.cmake \
       --replace 'set(X86 i386)' 'set(X86 i386 i486 i586 i686)'
-  '' + lib.optionalString (!haveLibc) ((lib.optionalString (lib.versionAtLeast release_version "18") ''
+  '' + lib.optionalString (!haveLibc) ((lib.optionalString (lib.versions.major release_version == "18") ''
     substituteInPlace lib/builtins/aarch64/sme-libc-routines.c \
       --replace "<stdlib.h>" "<stddef.h>"
   '') + ''
@@ -180,7 +179,7 @@ stdenv.mkDerivation ({
     ''
     substituteInPlace lib/builtins/clear_cache.c \
       --replace "#include <assert.h>" ""
-    substituteInPlace lib/builtins/cpu_model${lib.optionalString (lib.versionAtLeast version "18") "/x86"}.c \
+    substituteInPlace lib/builtins/cpu_model${lib.optionalString (lib.versionAtLeast release_version "18") "/x86"}.c \
       --replace "#include <assert.h>" ""
   '')) + lib.optionalString (lib.versionAtLeast release_version "13" && lib.versionOlder release_version "14") ''
     # https://github.com/llvm/llvm-project/blob/llvmorg-14.0.6/libcxx/utils/merge_archives.py
@@ -188,6 +187,13 @@ stdenv.mkDerivation ({
     substituteInPlace ../libcxx/utils/merge_archives.py \
       --replace-fail "import distutils.spawn" "from shutil import which as find_executable" \
       --replace-fail "distutils.spawn." ""
+  '' + lib.optionalString (lib.versionAtLeast release_version "19")
+    # codesign in sigtool doesn't support the various options used by the build
+    # and is present in the bootstrap-tools. Removing find_program prevents the
+    # build from trying to use it and failing.
+    ''
+    substituteInPlace cmake/Modules/AddCompilerRT.cmake \
+      --replace-fail 'find_program(CODESIGN codesign)' ""
   '';
 
   # Hack around weird upsream RPATH bug

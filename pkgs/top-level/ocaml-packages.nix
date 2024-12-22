@@ -1070,6 +1070,8 @@ let
 
     mec = callPackage ../development/ocaml-modules/mec { };
 
+    melange = callPackage ../development/tools/ocaml/melange { };
+
     memprof-limits = callPackage ../development/ocaml-modules/memprof-limits { };
 
     memtrace = callPackage ../development/ocaml-modules/memtrace { };
@@ -1153,6 +1155,8 @@ let
 
     mirage-crypto-rng-async = callPackage ../development/ocaml-modules/mirage-crypto/rng-async.nix { };
 
+    mirage-crypto-rng-eio = callPackage ../development/ocaml-modules/mirage-crypto/rng-eio.nix { };
+
     mirage-crypto-rng-lwt = callPackage ../development/ocaml-modules/mirage-crypto/rng-lwt.nix { };
 
     mirage-crypto-rng-mirage = callPackage ../development/ocaml-modules/mirage-crypto/rng-mirage.nix { };
@@ -1200,6 +1204,8 @@ let
     mldoc =  callPackage ../development/ocaml-modules/mldoc { };
 
     mlgmpidl =  callPackage ../development/ocaml-modules/mlgmpidl { };
+
+    mlx = callPackage ../development/ocaml-modules/mlx { };
 
     mm = callPackage ../development/ocaml-modules/mm { };
 
@@ -1337,6 +1343,7 @@ let
     ocamlformat_0_26_0 = ocamlformat.override { version = "0.26.0"; };
     ocamlformat_0_26_1 = ocamlformat.override { version = "0.26.1"; };
     ocamlformat_0_26_2 = ocamlformat.override { version = "0.26.2"; };
+    ocamlformat_0_27_0 = ocamlformat.override { version = "0.27.0"; };
 
     ocamlformat = callPackage ../development/ocaml-modules/ocamlformat/ocamlformat.nix {};
 
@@ -1648,6 +1655,10 @@ let
 
     reason-native = lib.recurseIntoAttrs (callPackage ../development/ocaml-modules/reason-native { });
 
+    reason-react = callPackage ../development/ocaml-modules/reason-react { };
+
+    reason-react-ppx = callPackage ../development/ocaml-modules/reason-react/ppx.nix { };
+
     rebez = callPackage ../development/ocaml-modules/rebez { };
 
     reperf = callPackage ../development/ocaml-modules/reperf { };
@@ -1690,6 +1701,8 @@ let
     rpclib-lwt = callPackage ../development/ocaml-modules/rpclib/lwt.nix { };
 
     rresult = callPackage ../development/ocaml-modules/rresult { };
+
+    rtop = callPackage ../development/compilers/reason/rtop.nix { };
 
     rusage = callPackage ../development/ocaml-modules/rusage { };
 
@@ -1832,6 +1845,8 @@ let
     tls = callPackage ../development/ocaml-modules/tls { };
 
     tls-async = callPackage ../development/ocaml-modules/tls/async.nix { };
+
+    tls-eio = callPackage ../development/ocaml-modules/tls/eio.nix { };
 
     tls-lwt = callPackage ../development/ocaml-modules/tls/lwt.nix { };
 

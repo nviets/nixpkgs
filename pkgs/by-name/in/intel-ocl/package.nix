@@ -1,4 +1,12 @@
-{ lib, stdenv, fetchzip, rpmextract, ncurses5, numactl, zlib }:
+{
+  lib,
+  stdenv,
+  fetchzip,
+  rpmextract,
+  ncurses5,
+  numactl,
+  zlib,
+}:
 
 stdenv.mkDerivation rec {
   pname = "intel-ocl";
@@ -74,5 +82,6 @@ stdenv.mkDerivation rec {
     license = lib.licenses.unfree;
     platforms = [ "x86_64-linux" ];
     maintainers = [ ];
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
 }
