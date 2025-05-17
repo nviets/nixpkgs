@@ -11271,6 +11271,8 @@ self: super: with self; {
 
   planetary-computer = callPackage ../development/python-modules/planetary-computer { };
 
+  plantcv = callPackage ../development/python-modules/plantcv { };
+
   plantuml = callPackage ../development/python-modules/plantuml { };
 
   plantuml-markdown = callPackage ../development/python-modules/plantuml-markdown {
@@ -18742,6 +18744,8 @@ self: super: with self; {
   vivisect = callPackage ../development/python-modules/vivisect {
     inherit (pkgs.libsForQt5) wrapQtAppsHook;
   };
+
+  vl-convert-python = callPackage ../development/python-modules/vl-convert-python { };
 
   vllm = callPackage ../development/python-modules/vllm { };
 
