@@ -11,16 +11,16 @@
 }:
 rustPlatform.buildRustPackage {
   pname = "influxdb3";
-  version = "3.0.1";
+  version = "3.0.3";
   src = fetchFromGitHub {
     owner = "influxdata";
     repo = "influxdb";
-    rev = "8daccb7ee8f82ffae99b25236af9645fd60e448b";
-    hash = "sha256-tHnLD5W3KQ1cILRHNmXAi4lvQQSBVUPxYCXmXLMLwIs=";
+    rev = "384c457ef5f0d5ca4981b22855e411d8cac2688e";
+    hash = "sha256-xCvm0PSQmi0nVpgh/dRrIeZAQUvrQtTrNIqLKWO3Sk4=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-KnmaIbK/2tRXjCpOLHcadIX8Od7lVDOwZ+FgE+yFE+Q=";
+  cargoHash = "sha256-0FQ6tNa8qNSyA0YCPZSnSip0Pl65yKRbek3J/e/DP6g=";
 
   nativeBuildInputs = [
     makeWrapper
@@ -50,7 +50,7 @@ rustPlatform.buildRustPackage {
     "gcp"
     "azure"
     "jemalloc_replacing_malloc"
-    "system-py"
+    #"system-py"
   ];
 
   postInstall = ''
