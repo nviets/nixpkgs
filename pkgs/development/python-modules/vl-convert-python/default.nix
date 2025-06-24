@@ -7,6 +7,7 @@
   libffi,
   callPackage,
   librusty_v8 ? callPackage ./librusty_v8.nix { },
+  nix-update-script,
 }:
 buildPythonPackage rec {
   pname = "vl-convert-python";
@@ -43,10 +44,18 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "vl_convert" ];
 
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--version-regex"
+      "vl-convert-python@(.*)"
+    ];
+  };
+
   meta = {
     description = "Utilities for converting Vega-Lite specs from the command line and Python";
     license = lib.licenses.bsd3;
     homepage = "https://github.com/vega/vl-convert";
+    changelog = "https://github.com/vega/vl-convert/releases/tag/v${version}";
     maintainers = with lib.maintainers; [ antonmosich ];
   };
 }

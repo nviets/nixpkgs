@@ -4,20 +4,21 @@
   dash,
   fetchFromGitHub,
 }:
-stdenvNoCC.mkDerivation {
+stdenvNoCC.mkDerivation rec {
   pname = "app2unit";
-  version = "0-unstable-2025-05-09";
+  version = "0.9.2";
 
   src = fetchFromGitHub {
     owner = "Vladimir-csp";
     repo = "app2unit";
-    rev = "7b9672a2dc16bdfbe7b7b7c27043529ca3bcb6ae";
-    sha256 = "03dnx5v75530fwppfgpjl6xzzmdbk73ymrlix129d9n5sqrz9wgk";
+    tag = "v${version}";
+    sha256 = "sha256-CwiB/Co75BbVXem2XD2i7kccgjcDk8a0lXCOoz0QVIc=";
   };
 
   installPhase = ''
     install -Dt $out/bin app2unit
     ln -s $out/bin/app2unit $out/bin/app2unit-open
+    ln -s $out/bin/app2unit $out/bin/app2unit-term
   '';
 
   dontPatchShebangs = true;
