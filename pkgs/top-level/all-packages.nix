@@ -1235,10 +1235,6 @@ with pkgs;
     stdenv = clangStdenv;
   };
 
-  breitbandmessung = callPackage ../applications/networking/breitbandmessung {
-    electron = electron_34;
-  };
-
   ### APPLICATIONS/VERSION-MANAGEMENT
 
   git = callPackage ../applications/version-management/git {
@@ -2548,15 +2544,15 @@ with pkgs;
   circus = with python310Packages; toPythonApplication circus;
 
   inherit (callPackage ../applications/networking/remote/citrix-workspace { })
-    citrix_workspace_23_09_0
     citrix_workspace_23_11_0
     citrix_workspace_24_02_0
     citrix_workspace_24_05_0
     citrix_workspace_24_08_0
     citrix_workspace_24_11_0
     citrix_workspace_25_03_0
+    citrix_workspace_25_05_0
     ;
-  citrix_workspace = citrix_workspace_25_03_0;
+  citrix_workspace = citrix_workspace_25_05_0;
 
   cmst = libsForQt5.callPackage ../tools/networking/cmst { };
 
@@ -3020,8 +3016,6 @@ with pkgs;
   uniscribe = callPackage ../tools/text/uniscribe { };
 
   gandi-cli = python3Packages.callPackage ../tools/networking/gandi-cli { };
-
-  gaphor = python3Packages.callPackage ../tools/misc/gaphor { };
 
   inherit (callPackages ../tools/filesystems/garage { })
     garage
@@ -3821,7 +3815,7 @@ with pkgs;
   };
 
   # Not in aliases because it wouldn't get picked up by callPackage
-  netbox = netbox_4_2;
+  netbox = netbox_4_3;
 
   netcap-nodpi = callPackage ../by-name/ne/netcap/package.nix {
     withDpi = false;
@@ -10569,10 +10563,6 @@ with pkgs;
   mssql_jdbc = callPackage ../servers/sql/mssql/jdbc { };
   jtds_jdbc = callPackage ../servers/sql/mssql/jdbc/jtds.nix { };
 
-  miniflux = callPackage ../by-name/mi/miniflux/package.nix {
-    buildGoModule = buildGo123Module;
-  };
-
   inherit (callPackage ../servers/mir { })
     mir
     mir_2_15
@@ -11095,10 +11085,6 @@ with pkgs;
   linuxPackages-rt_latest = linuxKernel.packageAliases.linux_rt_latest;
   linux-rt = linuxPackages-rt.kernel;
   linux-rt_latest = linuxPackages-rt_latest.kernel;
-
-  # Amateur Radio kernel
-  linuxPackages_ham = linuxKernel.packages.linux_ham;
-  linux_ham = linuxPackages_ham.kernel;
 
   # hardened kernels
   linuxPackages_hardened = linuxKernel.packages.linux_hardened;
@@ -12324,6 +12310,18 @@ with pkgs;
           buildMozillaMach
           ;
       };
+  firefox-esr-140-unwrapped =
+    import ../applications/networking/browsers/firefox/packages/firefox-esr-140.nix
+      {
+        inherit
+          stdenv
+          lib
+          callPackage
+          fetchurl
+          nixosTests
+          buildMozillaMach
+          ;
+      };
   firefox-esr-unwrapped = firefox-esr-128-unwrapped;
 
   firefox = wrapFirefox firefox-unwrapped { };
@@ -12333,6 +12331,11 @@ with pkgs;
   firefox-mobile = callPackage ../applications/networking/browsers/firefox/mobile-config.nix { };
 
   firefox-esr-128 = wrapFirefox firefox-esr-128-unwrapped {
+    nameSuffix = "-esr";
+    wmClass = "firefox-esr";
+    icon = "firefox-esr";
+  };
+  firefox-esr-140 = wrapFirefox firefox-esr-140-unwrapped {
     nameSuffix = "-esr";
     wmClass = "firefox-esr";
     icon = "firefox-esr";
@@ -15607,9 +15610,8 @@ with pkgs;
     });
     stdenv = gccStdenv;
   };
-  cvc5 = callPackage ../applications/science/logic/cvc5 {
-    cadical = pkgs.cadical.override { version = "2.0.0"; };
-  };
+
+  cvc5 = callPackage ../applications/science/logic/cvc5 { };
 
   ekrhyper = callPackage ../applications/science/logic/ekrhyper {
     ocaml = ocaml-ng.ocamlPackages_4_14_unsafe_string.ocaml;
