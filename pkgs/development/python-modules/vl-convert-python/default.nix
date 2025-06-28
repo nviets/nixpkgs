@@ -5,6 +5,7 @@
   rustPlatform,
   protobuf,
   libffi,
+  python,
   callPackage,
   librusty_v8 ? callPackage ./librusty_v8.nix { },
   nix-update-script,
