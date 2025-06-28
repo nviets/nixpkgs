@@ -38,6 +38,8 @@ buildPythonPackage rec {
     rustPlatform.cargoSetupHook
   ];
 
+  maturinBuildFlags = [ "--interpreter ${python.executable}" ];
+
   nativeBuildInputs = [ protobuf ];
 
   buildInputs = [ libffi ];
