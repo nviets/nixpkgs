@@ -306,10 +306,6 @@ with pkgs;
 
   cve = with python3Packages; toPythonApplication cvelib;
 
-  apko = callPackage ../development/tools/apko {
-    buildGoModule = buildGo123Module;
-  };
-
   basalt-monado = callPackage ../by-name/ba/basalt-monado/package.nix {
     tbb = tbb_2021;
     cereal = cereal_1_3_2;
@@ -339,10 +335,6 @@ with pkgs;
       file-rename
     ];
   } ../build-support/setup-hooks/gog-unpack.sh;
-
-  buf = callPackage ../by-name/bu/buf/package.nix {
-    buildGoModule = buildGo123Module;
-  };
 
   buildEnv = callPackage ../build-support/buildenv { }; # not actually a package
 
@@ -1887,10 +1879,6 @@ with pkgs;
 
   asmrepl = callPackage ../development/interpreters/asmrepl { };
 
-  atlas = callPackage ../by-name/at/atlas/package.nix {
-    buildGoModule = buildGo123Module;
-  };
-
   avahi = callPackage ../development/libraries/avahi { };
 
   avahi-compat = callPackage ../development/libraries/avahi {
@@ -2497,9 +2485,7 @@ with pkgs;
 
   cdist = python3Packages.callPackage ../tools/admin/cdist { };
 
-  cdrtools = callPackage ../tools/cd-dvd/cdrtools {
-    stdenv = if stdenv.hostPlatform.isDarwin then llvmPackages_14.stdenv else stdenv;
-  };
+  cdrtools = callPackage ../tools/cd-dvd/cdrtools { };
 
   cemu-ti = qt5.callPackage ../applications/science/math/cemu-ti { };
 
@@ -3207,8 +3193,6 @@ with pkgs;
   gssdp_1_6 = callPackage ../development/libraries/gssdp/1.6.nix { };
 
   gssdp-tools = callPackage ../development/libraries/gssdp/tools.nix { };
-
-  gtkd = callPackage ../development/libraries/gtkd { dcompiler = ldc; };
 
   gup = callPackage ../development/tools/build-managers/gup { };
 
@@ -4401,8 +4385,6 @@ with pkgs;
   solc-select = with python3Packages; toPythonApplication solc-select;
 
   splot = haskell.lib.compose.justStaticExecutables haskellPackages.splot;
-
-  sourcehut = callPackage ../applications/version-management/sourcehut { };
 
   sshfs = sshfs-fuse; # added 2017-08-14
 
@@ -6841,6 +6823,7 @@ with pkgs;
     electron_34-bin
     electron_35-bin
     electron_36-bin
+    electron_37-bin
     ;
 
   inherit (callPackages ../development/tools/electron/chromedriver { })
@@ -6848,14 +6831,11 @@ with pkgs;
     electron-chromedriver_34
     electron-chromedriver_35
     electron-chromedriver_36
+    electron-chromedriver_37
     ;
 
   electron_33 = electron_33-bin;
-  electron_34 =
-    if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_34 then
-      electron-source.electron_34
-    else
-      electron_34-bin;
+  electron_34 = electron_34-bin;
   electron_35 =
     if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_35 then
       electron-source.electron_35
@@ -6866,6 +6846,11 @@ with pkgs;
       electron-source.electron_36
     else
       electron_36-bin;
+  electron_37 =
+    if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_37 then
+      electron-source.electron_37
+    else
+      electron_37-bin;
   electron = electron_35;
   electron-bin = electron_35-bin;
   electron-chromedriver = electron-chromedriver_35;
@@ -8391,15 +8376,17 @@ with pkgs;
 
   hspellDicts = callPackage ../development/libraries/hspell/dicts.nix { };
 
-  hunspellDicts = recurseIntoAttrs (
-    callPackages ../development/libraries/hunspell/dictionaries.nix { }
-  );
+  hunspellDicts = recurseIntoAttrs (callPackages ../by-name/hu/hunspell/dictionaries.nix { });
 
   hunspellDictsChromium = recurseIntoAttrs (
-    callPackages ../development/libraries/hunspell/dictionaries-chromium.nix { }
+    callPackages ../by-name/hu/hunspell/dictionaries-chromium.nix { }
   );
 
-  hunspellWithDicts = dicts: callPackage ../by-name/hu/hunspell/wrapper.nix { inherit dicts; };
+  hunspellWithDicts =
+    dicts:
+    lib.warn "hunspellWithDicts is deprecated, please use hunspell.withDicts instead."
+      hunspell.withDicts
+      (_: dicts);
 
   hydra = callPackage ../by-name/hy/hydra/package.nix { nix = nixVersions.nix_2_29; };
 
@@ -9152,9 +9139,6 @@ with pkgs;
   zunclient = with python313Packages; toPythonApplication python-zunclient;
 
   inherit (callPackages ../development/libraries/libressl { })
-    libressl_3_6
-    libressl_3_7
-    libressl_3_8
     libressl_3_9
     libressl_4_0
     ;
@@ -9242,7 +9226,6 @@ with pkgs;
       protobuf_30 = callPackage ../development/libraries/protobuf/30.nix { };
       protobuf_29 = callPackage ../development/libraries/protobuf/29.nix { };
       protobuf_27 = callPackage ../development/libraries/protobuf/27.nix { };
-      protobuf_26 = callPackage ../development/libraries/protobuf/26.nix { };
       protobuf_25 = callPackage ../development/libraries/protobuf/25.nix { };
       protobuf_24 = callPackage ../development/libraries/protobuf/24.nix { };
       protobuf_21 = callPackage ../development/libraries/protobuf/21.nix {
@@ -9253,7 +9236,6 @@ with pkgs;
     protobuf_30
     protobuf_29
     protobuf_27
-    protobuf_26
     protobuf_25
     protobuf_24
     protobuf_21
@@ -13579,8 +13561,6 @@ with pkgs;
 
   qtbitcointrader = libsForQt5.callPackage ../applications/misc/qtbitcointrader { };
 
-  qtchan = libsForQt5.callPackage ../applications/networking/browsers/qtchan { };
-
   qtemu = libsForQt5.callPackage ../applications/virtualization/qtemu { };
 
   qtpass = libsForQt5.callPackage ../applications/misc/qtpass { };
@@ -14279,7 +14259,7 @@ with pkgs;
 
   webcord = callPackage ../by-name/we/webcord/package.nix { electron = electron_36; };
 
-  webcord-vencord = callPackage ../by-name/we/webcord-vencord/package.nix { electron = electron_34; };
+  webcord-vencord = callPackage ../by-name/we/webcord-vencord/package.nix { electron = electron_36; };
 
   webmacs = libsForQt5.callPackage ../applications/networking/browsers/webmacs {
     stdenv = if stdenv.cc.isClang then gccStdenv else stdenv;
@@ -16613,10 +16593,6 @@ with pkgs;
   gpio-utils = callPackage ../os-specific/linux/kernel/gpio-utils.nix { };
 
   inherit (callPackage ../applications/misc/zettlr { }) zettlr;
-
-  zrythm = callPackage ../applications/audio/zrythm {
-    inherit (plasma5Packages) breeze-icons;
-  };
 
   swift-corelibs-libdispatch = swiftPackages.Dispatch;
 

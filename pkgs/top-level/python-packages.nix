@@ -1817,6 +1817,8 @@ self: super: with self; {
 
   bibtexparser = callPackage ../development/python-modules/bibtexparser { };
 
+  bibtexparser_2 = callPackage ../development/python-modules/bibtexparser/2.nix { };
+
   bidict = callPackage ../development/python-modules/bidict { };
 
   bids-validator = callPackage ../development/python-modules/bids-validator { };
@@ -2287,8 +2289,6 @@ self: super: with self; {
       python3Packages = self;
     }
   );
-
-  casbin = callPackage ../development/python-modules/casbin { };
 
   case-converter = callPackage ../development/python-modules/case-converter { };
 
@@ -2896,6 +2896,8 @@ self: super: with self; {
   contourpy = callPackage ../development/python-modules/contourpy { };
 
   controku = callPackage ../development/python-modules/controku { };
+
+  control = callPackage ../development/python-modules/control { };
 
   convertdate = callPackage ../development/python-modules/convertdate { };
 
@@ -4882,6 +4884,8 @@ self: super: with self; {
 
   farama-notifications = callPackage ../development/python-modules/farama-notifications { };
 
+  fast-array-utils = callPackage ../development/python-modules/fast-array-utils { };
+
   fast-histogram = callPackage ../development/python-modules/fast-histogram { };
 
   fastai = callPackage ../development/python-modules/fastai { };
@@ -5673,6 +5677,8 @@ self: super: with self; {
 
   georss-wa-dfes-client = callPackage ../development/python-modules/georss-wa-dfes-client { };
 
+  geotorch = callPackage ../development/python-modules/geotorch { };
+
   gepetto-gui = toPythonModule (gepetto-viewer.withPlugins [ gepetto-viewer-corba ]);
 
   gepetto-viewer = toPythonModule (pkgs.gepetto-viewer.override { python3Packages = self; });
@@ -6355,9 +6361,15 @@ self: super: with self; {
 
   hatch-babel = callPackage ../development/python-modules/hatch-babel { };
 
+  hatch-docstring-description =
+    callPackage ../development/python-modules/hatch-docstring-description
+      { };
+
   hatch-fancy-pypi-readme = callPackage ../development/python-modules/hatch-fancy-pypi-readme { };
 
   hatch-jupyter-builder = callPackage ../development/python-modules/hatch-jupyter-builder { };
+
+  hatch-min-requirements = callPackage ../development/python-modules/hatch-min-requirements { };
 
   hatch-nodejs-version = callPackage ../development/python-modules/hatch-nodejs-version { };
 
@@ -6374,6 +6386,8 @@ self: super: with self; {
   haversine = callPackage ../development/python-modules/haversine { };
 
   hawkauthlib = callPackage ../development/python-modules/hawkauthlib { };
+
+  hawkmoth = callPackage ../development/python-modules/hawkmoth { };
 
   haystack-ai = callPackage ../development/python-modules/haystack-ai { };
 
@@ -7334,7 +7348,10 @@ self: super: with self; {
 
   jsonmerge = callPackage ../development/python-modules/jsonmerge { };
 
-  jsonnet = buildPythonPackage { inherit (pkgs.jsonnet) name src; };
+  jsonnet = buildPythonPackage {
+    inherit (pkgs.jsonnet) name src;
+    format = "setuptools";
+  };
 
   jsonpatch = callPackage ../development/python-modules/jsonpatch { };
 
@@ -7587,6 +7604,8 @@ self: super: with self; {
   keras = callPackage ../development/python-modules/keras { };
 
   kerberos = callPackage ../development/python-modules/kerberos { };
+
+  kernels = callPackage ../development/python-modules/kernels { };
 
   kestra = callPackage ../development/python-modules/kestra { };
 
@@ -8450,6 +8469,8 @@ self: super: with self; {
   llm-openrouter = callPackage ../development/python-modules/llm-openrouter { };
 
   llm-pdf-to-images = callPackage ../development/python-modules/llm-pdf-to-images { };
+
+  llm-perplexity = callPackage ../development/python-modules/llm-perplexity { };
 
   llm-sentence-transformers = callPackage ../development/python-modules/llm-sentence-transformers { };
 
@@ -11707,6 +11728,8 @@ self: super: with self; {
 
   posix-ipc = callPackage ../development/python-modules/posix-ipc { };
 
+  postgrest-py = callPackage ../development/python-modules/postgrest-py { };
+
   posthog = callPackage ../development/python-modules/posthog { };
 
   pot = callPackage ../development/python-modules/pot { };
@@ -11836,6 +11859,8 @@ self: super: with self; {
   prompthub-py = callPackage ../development/python-modules/prompthub-py { };
 
   propcache = callPackage ../development/python-modules/propcache { };
+
+  property-cached = callPackage ../development/python-modules/property-cached { };
 
   property-manager = callPackage ../development/python-modules/property-manager { };
 
@@ -11998,6 +12023,8 @@ self: super: with self; {
   pure-python-adb-homeassistant =
     callPackage ../development/python-modules/pure-python-adb-homeassistant
       { };
+
+  pure-sasl = callPackage ../development/python-modules/pure-sasl { };
 
   puremagic = callPackage ../development/python-modules/puremagic { };
 
@@ -12315,6 +12342,8 @@ self: super: with self; {
   pycares = callPackage ../development/python-modules/pycares { };
 
   pycarwings2 = callPackage ../development/python-modules/pycarwings2 { };
+
+  pycasbin = callPackage ../development/python-modules/pycasbin { };
 
   pycatch22 = callPackage ../development/python-modules/pycatch22 { };
 
@@ -18949,6 +18978,8 @@ self: super: with self; {
 
   usbtmc = callPackage ../development/python-modules/usbtmc { };
 
+  useful-types = callPackage ../development/python-modules/useful-types { };
+
   user-agents = callPackage ../development/python-modules/user-agents { };
 
   userpath = callPackage ../development/python-modules/userpath { };
@@ -19306,6 +19337,8 @@ self: super: with self; {
   webexpythonsdk = callPackage ../development/python-modules/webexpythonsdk { };
 
   webexteamssdk = callPackage ../development/python-modules/webexteamssdk { };
+
+  webidl = callPackage ../development/python-modules/webidl { };
 
   weblate-language-data = callPackage ../development/python-modules/weblate-language-data { };
 
