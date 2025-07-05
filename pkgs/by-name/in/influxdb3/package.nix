@@ -16,7 +16,7 @@ rustPlatform.buildRustPackage {
     owner = "influxdata";
     repo = "influxdb";
     rev = "c681ea058d49e0f9aab8cb555ff9990d07a283df";
-    hash = "sha256-aCvm0PSQmi0nVpgh/dRrIeZAQUvrQtTrNIqLKWO3Sk4=";
+    hash = "sha256-ItD95n4nh3IjccVfACDHlmtptSP5xxqBA0S7o/UxnA8=";
   };
 
   useFetchCargoVendor = true;
