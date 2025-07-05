@@ -15,12 +15,12 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "influxdata";
     repo = "influxdb";
-    rev = "384c457ef5f0d5ca4981b22855e411d8cac2688e";
-    hash = "sha256-xCvm0PSQmi0nVpgh/dRrIeZAQUvrQtTrNIqLKWO3Sk4=";
+    rev = "c681ea058d49e0f9aab8cb555ff9990d07a283df";
+    hash = "sha256-aCvm0PSQmi0nVpgh/dRrIeZAQUvrQtTrNIqLKWO3Sk4=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-0FQ6tNa8qNSyA0YCPZSnSip0Pl65yKRbek3J/e/DP6g=";
+  cargoHash = "sha256-aFQ6tNa8qNSyA0YCPZSnSip0Pl65yKRbek3J/e/DP6g=";
 
   nativeBuildInputs = [
     makeWrapper
