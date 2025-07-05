@@ -11,7 +11,7 @@
 }:
 rustPlatform.buildRustPackage {
   pname = "influxdb3";
-  version = "3.0.3";
+  version = "3.3.0";
   src = fetchFromGitHub {
     owner = "influxdata";
     repo = "influxdb";
@@ -37,6 +37,7 @@ rustPlatform.buildRustPackage {
     GIT_HASH = "000000000000000000000000000000000000000000000000000";
     GIT_HASH_SHORT = "0000000";
     PYO3_PYTHON = lib.getExe python3;
+    INFLUXDB3_BUILD_VERSION = "3.3.0";
   };
 
   postPatch = ''
