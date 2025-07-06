@@ -771,6 +771,7 @@ in
     _module.args.latestKernel = true;
   };
   lasuite-docs = runTest ./web-apps/lasuite-docs.nix;
+  lasuite-meet = runTest ./web-apps/lasuite-meet.nix;
   lavalink = runTest ./lavalink.nix;
   leaps = runTest ./leaps.nix;
   lemmy = runTest ./lemmy.nix;
@@ -1276,6 +1277,7 @@ in
   sgt-puzzles = runTest ./sgt-puzzles.nix;
   shadow = runTest ./shadow.nix;
   shadowsocks = handleTest ./shadowsocks { };
+  sharkey = runTest ./web-apps/sharkey.nix;
   shattered-pixel-dungeon = runTest ./shattered-pixel-dungeon.nix;
   shiori = runTest ./shiori.nix;
   signal-desktop = runTest ./signal-desktop.nix;
