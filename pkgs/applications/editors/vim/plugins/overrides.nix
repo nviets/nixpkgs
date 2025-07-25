@@ -170,6 +170,9 @@ in
   # Regular overrides
 
   advanced-git-search-nvim = super.advanced-git-search-nvim.overrideAttrs {
+    checkInputs = with self; [
+      snacks-nvim
+    ];
     dependencies = with self; [
       telescope-nvim
       vim-fugitive
@@ -390,17 +393,16 @@ in
     # These usually implicitly set by cc-wrapper around clang (pkgs/build-support/cc-wrapper).
     # The linked ruby code shows generates the required '.clang_complete' for cmake based projects
     # https://gist.github.com/Mic92/135e83803ed29162817fce4098dec144
-    preFixup =
-      ''
-        substituteInPlace "$out"/plugin/clang_complete.vim \
-          --replace-fail "let g:clang_library_path = ''
-      + "''"
-      + ''
-        " "let g:clang_library_path='${lib.getLib llvmPackages.libclang}/lib/libclang.so'"
+    preFixup = ''
+      substituteInPlace "$out"/plugin/clang_complete.vim \
+        --replace-fail "let g:clang_library_path = ''
+    + "''"
+    + ''
+      " "let g:clang_library_path='${lib.getLib llvmPackages.libclang}/lib/libclang.so'"
 
-              substituteInPlace "$out"/plugin/libclang.py \
-                --replace-fail "/usr/lib/clang" "${llvmPackages.clang.cc}/lib/clang"
-      '';
+            substituteInPlace "$out"/plugin/libclang.py \
+              --replace-fail "/usr/lib/clang" "${llvmPackages.clang.cc}/lib/clang"
+    '';
   };
 
   claude-code-nvim = super.claude-code-nvim.overrideAttrs {
@@ -1078,13 +1080,11 @@ in
   };
 
   direnv-vim = super.direnv-vim.overrideAttrs (old: {
-    preFixup =
-      old.preFixup or ""
-      + ''
-        substituteInPlace $out/autoload/direnv.vim \
-          --replace-fail "let s:direnv_cmd = get(g:, 'direnv_cmd', 'direnv')" \
-            "let s:direnv_cmd = get(g:, 'direnv_cmd', '${lib.getBin direnv}/bin/direnv')"
-      '';
+    preFixup = old.preFixup or "" + ''
+      substituteInPlace $out/autoload/direnv.vim \
+        --replace-fail "let s:direnv_cmd = get(g:, 'direnv_cmd', 'direnv')" \
+          "let s:direnv_cmd = get(g:, 'direnv_cmd', '${lib.getBin direnv}/bin/direnv')"
+    '';
   });
 
   dotnet-nvim = super.dotnet-nvim.overrideAttrs {
@@ -1239,6 +1239,15 @@ in
     nvimSkipModules = [
       # TODO: package fzy-lua-native
       "fuzzy_nvim.fzy_matcher"
+    ];
+  };
+
+  fyler-nvim = super.fyler-nvim.overrideAttrs {
+    nvimSkipModules = [
+      # Requires setup call
+      "fyler.views.explorer.init"
+      "fyler.views.explorer.actions"
+      "fyler.views.explorer.ui"
     ];
   };
 
@@ -1506,7 +1515,7 @@ in
     dependencies = [ self.nvim-treesitter ];
   };
 
-  jdd-nvim = super.lazyjj-nvim.overrideAttrs {
+  jdd-nvim = super.jdd-nvim.overrideAttrs {
     dependencies = [ self.plenary-nvim ];
   };
 
@@ -3932,13 +3941,11 @@ in
   };
 
   vim-stylish-haskell = super.vim-stylish-haskell.overrideAttrs (old: {
-    postPatch =
-      old.postPatch or ""
-      + ''
-        substituteInPlace ftplugin/haskell/stylish-haskell.vim --replace-fail \
-          'g:stylish_haskell_command = "stylish-haskell"' \
-          'g:stylish_haskell_command = "${stylish-haskell}/bin/stylish-haskell"'
-      '';
+    postPatch = old.postPatch or "" + ''
+      substituteInPlace ftplugin/haskell/stylish-haskell.vim --replace-fail \
+        'g:stylish_haskell_command = "stylish-haskell"' \
+        'g:stylish_haskell_command = "${stylish-haskell}/bin/stylish-haskell"'
+    '';
   });
 
   vim-surround = super.vim-surround.overrideAttrs {
@@ -4044,7 +4051,10 @@ in
   };
 
   wtf-nvim = super.wtf-nvim.overrideAttrs {
-    dependencies = [ self.nui-nvim ];
+    dependencies = with self; [
+      nui-nvim
+      plenary-nvim
+    ];
   };
 
   xmake-nvim = super.xmake-nvim.overrideAttrs {

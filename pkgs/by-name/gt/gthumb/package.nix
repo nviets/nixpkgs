@@ -19,6 +19,7 @@
   gtk3,
   gsettings-desktop-schemas,
   libchamplain,
+  libjxl,
   librsvg,
   libwebp,
   libX11,
@@ -74,6 +75,7 @@ stdenv.mkDerivation (finalAttrs: {
     libchamplain
     libheif
     libjpeg
+    libjxl
     libraw
     librsvg
     libsecret
@@ -81,10 +83,12 @@ stdenv.mkDerivation (finalAttrs: {
     libtiff
     libwebp
     libX11
-  ] ++ lib.optional withWebservices webkitgtk_4_0;
+  ]
+  ++ lib.optional withWebservices webkitgtk_4_0;
 
   mesonFlags = [
     "-Dlibchamplain=true"
+    "-Dlibjxl=true"
     (lib.mesonBool "webservices" withWebservices)
   ];
 
