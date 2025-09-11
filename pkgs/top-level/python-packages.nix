@@ -11851,6 +11851,8 @@ self: super: with self; {
 
   planetary-computer = callPackage ../development/python-modules/planetary-computer { };
 
+  plantcv = callPackage ../development/python-modules/plantcv { };
+
   plantuml = callPackage ../development/python-modules/plantuml { };
 
   plantuml-markdown = callPackage ../development/python-modules/plantuml-markdown {
